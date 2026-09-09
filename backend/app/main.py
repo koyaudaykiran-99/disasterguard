@@ -1,3 +1,32 @@
+
+def run_database_schema_migrations():
+    """Ensure schema compatibility for existing tables on production PostgreSQL."""
+    from sqlalchemy import text
+    try:
+        with engine.begin() as conn:
+            dialect_name = engine.dialect.name
+            if dialect_name == "postgresql":
+                conn.execute(text("""
+                    DO $$
+                    BEGIN
+                        IF NOT EXISTS (
+                            SELECT 1 FROM information_schema.columns 
+                            WHERE table_name='incidents' AND column_name='sos_id'
+                        ) THEN
+                            ALTER TABLE incidents ADD COLUMN sos_id INTEGER REFERENCES sos_reports(id) ON DELETE SET NULL;
+                            CREATE INDEX IF NOT EXISTS ix_incidents_sos_id ON incidents(sos_id);
+                        END IF;
+                    END $$;
+                """))
+            else:
+                try:
+                    conn.execute(text("ALTER TABLE incidents ADD COLUMN sos_id INTEGER"))
+                except Exception:
+                    pass
+            logger.info("Database schema compatibility verified: incidents.sos_id confirmed.")
+    except Exception as e:
+        logger.warning(f"Schema compatibility check warning: {e}")
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
@@ -18,6 +47,7 @@ from typing import Dict, Any
 try:
     logger.info("Initializing database tables and seed records...")
     Base.metadata.create_all(bind=engine)
+    run_database_schema_migrations()
     seed_database()
 except Exception as e:
     logger.warning(f"Database initialization warning: {e}")
@@ -43,6 +73,14 @@ from app.services.websocket_manager import ws_manager
 # CORS Middleware configuration
 # Explicit origins + Vercel domain pattern; never use wildcard '*' with credentials
 cors_origins = list(settings.CORS_ORIGINS) if settings.CORS_ORIGINS else [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+    "https://citizen-app-iota.vercel.app",
+    "https://disasterguard-g3lzq274n-koyaudaykiran-99.vercel.app",
+    "https://disasterguard.vercel.app",
+    "https://disasterguard-koyaudaykiran-99.vercel.app",
     "http://localhost:3000",
     "http://localhost:5173",
     "http://127.0.0.1:3000",

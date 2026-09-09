@@ -46,6 +46,10 @@ class Settings(BaseSettings):
         "http://localhost:5173",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:5173",
+        "https://citizen-app-iota.vercel.app",
+        "https://disasterguard-g3lzq274n-koyaudaykiran-99.vercel.app",
+        "https://disasterguard.vercel.app",
+        "https://disasterguard-koyaudaykiran-99.vercel.app",
     ]
 
     @field_validator("CORS_ORIGINS", mode="before")
