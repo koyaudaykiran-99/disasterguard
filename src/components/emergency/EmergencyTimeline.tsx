@@ -17,6 +17,7 @@ import {
   Volume2,
 } from 'lucide-react';
 import { EmergencyUpdate } from '../../types/disaster';
+import { API_BASE } from '../../services/disasterService';
 
 interface EmergencyTimelineProps {
   sosId?: number | string;
@@ -41,7 +42,7 @@ export const EmergencyTimeline: React.FC<EmergencyTimelineProps> = ({
     let isMounted = true;
     const fetchUpdates = async () => {
       try {
-        const res = await fetch(`/api/v1/sos/${numericId}/updates`);
+        const res = await fetch(`${API_BASE}/sos/${numericId}/updates`);
         if (res.ok) {
           const data = await res.json();
           if (isMounted && Array.isArray(data) && data.length > 0) {
@@ -269,7 +270,7 @@ export const EmergencyTimeline: React.FC<EmergencyTimelineProps> = ({
                       <audio
                         controls
                         preload="none"
-                        src={`/api/v1/sos/${item.sosId || (typeof sosId === 'number' ? sosId : parseInt(String(sosId || '').replace(/\D/g, ''), 10) || 1)}/voice/${item.audio_id || item.audioId}`}
+                        src={`${API_BASE}/sos/${item.sosId || (typeof sosId === 'number' ? sosId : parseInt(String(sosId || '').replace(/\D/g, ''), 10) || 1)}/voice/${item.audio_id || item.audioId}`}
                         className="w-full h-6"
                       />
                     </div>

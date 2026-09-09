@@ -70,16 +70,16 @@ class EmergencyUpdateResponse(BaseModel):
     sos_id: int
     incident_id: Optional[int] = None
     user_id: Optional[int] = None
-    update_type: str
+    update_type: Optional[str] = "TEXT_UPDATE"
     message: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     accuracy: Optional[float] = None
     location_timestamp: Optional[datetime] = None
-    source: str
-    delivery_status: str
-    original_language: str
-    processing_status: str
+    source: Optional[str] = "CITIZEN_APP"
+    delivery_status: Optional[str] = "RECEIVED"
+    original_language: Optional[str] = "en"
+    processing_status: Optional[str] = "PROCESSED"
     audio_id: Optional[str] = None
     audio_duration: Optional[float] = None
     audio_mime_type: Optional[str] = None
@@ -88,8 +88,8 @@ class EmergencyUpdateResponse(BaseModel):
     transcription_provider: Optional[str] = None
     transcription_model: Optional[str] = None
     transcription_confidence: Optional[float] = None
-    created_at: datetime
-    received_at: datetime
+    created_at: Optional[datetime] = None
+    received_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

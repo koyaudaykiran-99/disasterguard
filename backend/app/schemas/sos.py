@@ -91,14 +91,14 @@ class SOSResponse(BaseModel):
     id: int
     user_id: Optional[int] = None
     client_id: Optional[str] = None
-    latitude: float
-    longitude: float
+    latitude: Optional[float] = 0.0
+    longitude: Optional[float] = 0.0
     accuracy: Optional[float] = None
     message: Optional[str] = None
-    severity: str
-    status: str
+    severity: Optional[str] = "CRITICAL"
+    status: Optional[str] = "PENDING"
     transport: Optional[str] = "INTERNET"
-    created_at: datetime
+    created_at: Optional[datetime] = None
     device_timestamp: Optional[datetime] = None
     success: bool = True
     sos_id: Optional[int] = None

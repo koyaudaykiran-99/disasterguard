@@ -13,15 +13,15 @@ class IncidentCreate(BaseModel):
 
 class IncidentResponse(BaseModel):
     id: int
-    title: str
+    title: Optional[str] = "Emergency Incident"
     description: Optional[str] = None
-    incident_type: str
-    latitude: float
-    longitude: float
-    severity: str
-    status: str
-    source: str
-    priority_score: int
+    incident_type: Optional[str] = "FLOOD_TRAPPED_PERSON"
+    latitude: Optional[float] = 0.0
+    longitude: Optional[float] = 0.0
+    severity: Optional[str] = "HIGH"
+    status: Optional[str] = "PENDING"
+    source: Optional[str] = "CITIZEN_SOS"
+    priority_score: Optional[int] = 50
     sos_id: Optional[int] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None

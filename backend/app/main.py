@@ -73,7 +73,7 @@ async def structured_request_logging_middleware(request: Request, call_next):
         logger.error(f"[{request_id}] {request.method} {request.url.path} -> UNHANDLED {type(exc).__name__} ({duration_ms}ms)")
         raise exc
 
-# Global Unhandled Exception Handler (prevents stack trace exposure in responses)
+# Global Unhandled Exception Handler (returns operational error description)
 async def global_exception_handler(request: Request, exc: Exception):
     logger.exception(f"Unhandled server error on {request.method} {request.url.path}: {exc}")
     return JSONResponse(
@@ -82,7 +82,8 @@ async def global_exception_handler(request: Request, exc: Exception):
             "success": False,
             "error": {
                 "code": "INTERNAL_SERVER_ERROR",
-                "message": "An unexpected operational error occurred. Telemetry has been recorded."
+                "message": f"Operational error: {str(exc)}",
+                "type": type(exc).__name__
             }
         }
     )

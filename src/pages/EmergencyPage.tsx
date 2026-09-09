@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { AITriageEvidenceModal } from '../components/emergency/AITriageEvidenceModal';
 import { AIRescueRecommendationPanel } from '../components/emergency/AIRescueRecommendationPanel';
+import { EmergencyTimeline } from '../components/emergency/EmergencyTimeline';
 import { OperationsDashboard } from '../components/operations/OperationsDashboard';
 import { SituationAwarenessPanel } from '../components/operations/SituationAwarenessPanel';
 import { OperatorAttentionQueue } from '../components/operations/OperatorAttentionQueue';
@@ -41,7 +42,7 @@ import { SOSIncident } from '../types/disaster';
 
 export const EmergencyPage: React.FC = () => {
   const { sosIncidents, createSOSRequest, resolveSOSIncident } = useDisaster();
-  const [viewMode, setViewMode] = useState<'situational' | 'operations' | 'distress'>('situational');
+  const [viewMode, setViewMode] = useState<'situational' | 'operations' | 'distress'>('distress');
   const [isSOSActive, setIsSOSActive] = useState<boolean>(false);
   const [selectedEvidenceIncident, setSelectedEvidenceIncident] = useState<SOSIncident | null>(null);
   const [customMessage, setCustomMessage] = useState<string>(
@@ -471,6 +472,9 @@ export const EmergencyPage: React.FC = () => {
 
                       {/* AI Rescue Recommendation Panel */}
                       <AIRescueRecommendationPanel incident={incident} />
+
+                      {/* Real-time Voice Audio Player & Timeline Updates */}
+                      <EmergencyTimeline sosId={incident.id} />
                     </div>
                   </AnimatedCard>
                 ))}

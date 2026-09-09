@@ -17,7 +17,9 @@ import {
   MapPin,
   ExternalLink,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 
 // Fix Leaflet default icon path issue with bundlers
@@ -84,6 +86,7 @@ export const CitizenMap: React.FC<CitizenMapProps> = ({
 
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'SHELTERS' | 'HOSPITALS' | 'HAZARDS'>('ALL');
   const [showRouteGuidance, setShowRouteGuidance] = useState<boolean>(true);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [selectedDestination, setSelectedDestination] = useState<{
     name: string;
     type: 'SHELTER' | 'HOSPITAL';
@@ -92,6 +95,14 @@ export const CitizenMap: React.FC<CitizenMapProps> = ({
     distanceKm: number;
     notes?: string;
   } | null>(null);
+
+  // Re-calculate map dimensions whenever fullscreen toggles
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      mapInstanceRef.current?.invalidateSize();
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [isFullscreen]);
 
   // Initialize Map
   useEffect(() => {
@@ -410,38 +421,65 @@ export const CitizenMap: React.FC<CitizenMapProps> = ({
   };
 
   return (
-    <div className={`relative w-full rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl bg-white dark:bg-slate-950 flex flex-col ${className}`}>
-      <div ref={mapContainerRef} className="w-full h-full z-0" />
+    <div
+      className={`relative w-full overflow-hidden transition-all duration-300 flex flex-col ${
+        isFullscreen
+          ? 'fixed inset-0 z-[9999] w-screen h-screen rounded-none bg-slate-950 shadow-2xl'
+          : `rounded-3xl border border-slate-700/80 shadow-card-3d bg-slate-950 ${className}`
+      }`}
+    >
+      <div ref={mapContainerRef} className="w-full h-full z-0 flex-1" />
 
-      <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between pointer-events-none">
-        <div className="flex items-center gap-1.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-1 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md pointer-events-auto">
+      <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between pointer-events-none gap-2 flex-wrap">
+        <div className="flex items-center gap-1 bg-slate-900/95 backdrop-blur-md p-1 rounded-2xl border border-slate-700 shadow-xl pointer-events-auto">
           {(['ALL', 'SHELTERS', 'HOSPITALS', 'HAZARDS'] as const).map((filter) => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-2.5 py-1 text-[11px] font-semibold rounded-xl transition-all ${
+              className={`px-2.5 py-1 text-[11px] font-bold rounded-xl transition-all ${
                 activeFilter === filter
-                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-rose-600 text-white shadow-md'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
               }`}
             >
               {filter === 'ALL' && (language === 'te' ? 'అన్నీ' : 'All')}
               {filter === 'SHELTERS' && (language === 'te' ? '🛡️ శిబిరాలు' : '🛡️ Shelters')}
               {filter === 'HOSPITALS' && (language === 'te' ? '🏥 ఆసుపత్రులు' : '🏥 Hospitals')}
-              {filter === 'HAZARDS' && (language === 'te' ? '⚠️ వరద ప్రాంతాలు' : '⚠️ Flood Zones')}
+              {filter === 'HAZARDS' && (language === 'te' ? '⚠️ వరద' : '⚠️ Flood Zones')}
             </button>
           ))}
         </div>
 
-        <button
-          onClick={handleCenterUser}
-          disabled={isLocating}
-          className="p-2.5 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200 dark:border-slate-800 shadow-md text-cyan-600 dark:text-cyan-400 hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center gap-1.5 text-xs font-semibold"
-          title="Locate my position"
-        >
-          <Crosshair className={`w-4 h-4 ${isLocating ? 'animate-spin' : ''}`} />
-          <span className="hidden sm:inline">{isLocating ? 'Locating...' : 'GPS'}</span>
-        </button>
+        <div className="flex items-center gap-2 pointer-events-auto">
+          {/* Full Screen Maximize / Minimize Button */}
+          <button
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            className="px-3 py-2 rounded-2xl bg-slate-900/95 backdrop-blur-md border border-slate-700 shadow-xl text-white hover:text-cyan-300 hover:border-cyan-500/50 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 text-xs font-bold"
+            title={isFullscreen ? 'Exit Full Screen' : 'Maximize Whole Screen'}
+          >
+            {isFullscreen ? (
+              <>
+                <Minimize2 className="w-4 h-4 text-rose-400" />
+                <span>{language === 'te' ? 'సాధారణ పరిమాణం' : 'Minimize'}</span>
+              </>
+            ) : (
+              <>
+                <Maximize2 className="w-4 h-4 text-cyan-400" />
+                <span>{language === 'te' ? 'పూర్తి స్క్రీన్' : 'Full Screen'}</span>
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={handleCenterUser}
+            disabled={isLocating}
+            className="p-2 rounded-2xl bg-slate-900/95 backdrop-blur-md border border-slate-700 shadow-xl text-cyan-400 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 text-xs font-bold"
+            title="Locate my position"
+          >
+            <Crosshair className={`w-4 h-4 ${isLocating ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">{isLocating ? 'Locating...' : 'GPS'}</span>
+          </button>
+        </div>
       </div>
 
       {selectedDestination && showRouteGuidance && (

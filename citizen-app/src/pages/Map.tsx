@@ -80,7 +80,7 @@ export const MapPage: React.FC = () => {
         hospitals={hospitals}
         selectedFacility={selectedFacility}
         onSelectFacility={(f) => setSelectedFacility(f)}
-        className="h-[380px]"
+        className="h-[480px] sm:h-[540px]"
       />
 
       <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-transparent border border-emerald-500/30 flex items-start gap-3">

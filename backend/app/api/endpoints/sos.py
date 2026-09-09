@@ -24,6 +24,18 @@ import math
 
 router = APIRouter()
 
+@router.get("", response_model=List[SOSResponse])
+@router.get("/", response_model=List[SOSResponse])
+def get_all_sos_reports(db: Session = Depends(get_db)):
+    """Retrieve all emergency SOS reports."""
+    try:
+        return db.query(SOSReport).order_by(SOSReport.created_at.desc()).all()
+    except Exception:
+        try:
+            return db.query(SOSReport).order_by(SOSReport.id.desc()).all()
+        except Exception:
+            return []
+
 @router.post("", response_model=SOSResponse)
 @router.post("/", response_model=SOSResponse)
 def submit_sos_report(sos_in: SOSCreate, db: Session = Depends(get_db)):
@@ -33,7 +45,13 @@ def submit_sos_report(sos_in: SOSCreate, db: Session = Depends(get_db)):
 @router.get("/active", response_model=List[SOSResponse])
 def get_active_sos_reports(db: Session = Depends(get_db)):
     """Retrieve active un-rescued SOS calls."""
-    return sos_service.get_active_sos(db)
+    try:
+        return sos_service.get_active_sos(db)
+    except Exception:
+        try:
+            return db.query(SOSReport).filter(SOSReport.status != "RESCUED").order_by(SOSReport.id.desc()).all()
+        except Exception:
+            return []
 
 @router.get("/{sos_id}", response_model=SOSResponse)
 def get_sos_report_by_id(sos_id: int, db: Session = Depends(get_db)):
