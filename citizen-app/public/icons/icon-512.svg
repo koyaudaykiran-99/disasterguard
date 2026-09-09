@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="112" fill="#080C14"/>
+  <defs>
+    <linearGradient id="shieldGrad512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="50%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+    <linearGradient id="innerGrad512" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+  </defs>
+  <path d="M256 70 L410 130 V256 C410 355 256 442 256 442 C256 442 102 355 102 256 V130 Z" fill="url(#shieldGrad512)" />
+  <path d="M256 94 L388 148 V254 C388 335 256 412 256 412 C256 412 124 335 124 254 V148 Z" fill="url(#innerGrad512)" />
+  <circle cx="256" cy="256" r="82" stroke="#06B6D4" stroke-width="8" opacity="0.35" />
+  <circle cx="256" cy="256" r="50" stroke="#3B82F6" stroke-width="8" opacity="0.75" />
+  <circle cx="256" cy="256" r="22" fill="#10B981" />
+  <path d="M256 172 V146 M256 340 V366 M172 256 H146 M340 256 H366" stroke="#06B6D4" stroke-width="8" stroke-linecap="round" />
+</svg>

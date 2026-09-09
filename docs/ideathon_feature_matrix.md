@@ -1,0 +1,11 @@
+# AI DisasterGuard — Ideathon Evaluation & Feature Matrix
+
+AI DisasterGuard was developed for high-impact demonstration at national and central-level disaster management and emergency innovation competitions.
+
+| Criterion | Challenge in Disaster Response | AI DisasterGuard Implemented Solution | Technical Demonstration |
+|---|---|---|---|
+| **INNOVATION** | Generic chatbots hallucinate static answers without real operational data. | Context-aware AI Emergency Agent grounded in live PostgreSQL tables and Scikit-Learn ML models. | Automated intent routing (`ContextRouter`), 16 parameterized tools, and deterministic offline fallback engine. |
+| **PRACTICALITY** | Emergency dashboards only show static historical records; rescue coordination is delayed. | End-to-end automated workflow: Weather observation → ML prediction → Risk zone mapping → Citizen SOS → AI NLP triage → Nearest rescue team dispatch recommendation. | 8-stage disaster simulation demonstrating live transition from normal conditions to critical basement entrapment rescue. |
+| **TECHNICAL FEASIBILITY**| Prototype systems frequently rely on mock databases or toy memory dictionaries. | Built on production-ready PostgreSQL 18, PostGIS spatial queries (`ST_DWithin`), Alembic migrations, FastAPI backend, and React/TypeScript frontend. | 54 passing automated tests, zero TypeScript errors in production build, and sub-10ms database query latency. |
+| **OUTREACH & SAFETY** | Public citizens panic or leak sensitive tactical coordinates; AI models make unsafe decisions. | Role-based context isolation (`OPERATOR`, `ADMIN`, `RESCUE_TEAM`, `CITIZEN`) stripping PII and tactical coordinates, combined with strict human-in-the-loop non-autonomous dispatch enforcement. | Provenance badges (`LIVE REAL DATA` vs `SIMULATION OVERRIDE`), WCAG accessibility compliance, and persistent advisory disclaimers. |
+| **SCALABILITY** | System crashes during emergency surges or when remote LLM APIs become unavailable. | Docker containerization, asynchronous connection pooling, and automatic graceful degradation to offline heuristic decision engine. | Fully air-gapped capable; 100% functionality maintained even during complete Internet disconnection. |

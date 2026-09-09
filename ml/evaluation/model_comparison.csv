@@ -1,0 +1,9 @@
+Task,Model,Type,Accuracy,Precision,Recall,F1,Dangerous_Event_Recall,MAE,RMSE,R2
+Rainfall Classification,Baseline (Dummy Most Frequent),BASELINE,0.9112,0.8303,0.9112,0.8689,0.0,-,-,-
+Rainfall Classification,Logistic Regression,BASELINE,0.9178,0.8897,0.9178,0.8971,0.1042,-,-,-
+Rainfall Classification,Gradient Boosting Classifier,CANDIDATE,0.9066,0.8856,0.9066,0.8941,0.1875,-,-,-
+Rainfall Classification,Balanced Random Forest Classifier,CANDIDATE,0.8661,0.9009,0.8661,0.8798,0.1875,-,-,-
+Rainfall Volume Regression,Baseline (Dummy Mean),BASELINE,-,-,-,-,-,1.99,5.23,-0.0186
+Rainfall Volume Regression,Ridge Regression,BASELINE,-,-,-,-,-,1.68,4.15,0.3579
+Rainfall Volume Regression,Gradient Boosting Regressor,CANDIDATE,-,-,-,-,-,1.6,4.15,0.3593
+Rainfall Volume Regression,Random Forest Regressor,CANDIDATE,-,-,-,-,-,1.59,3.99,0.4079

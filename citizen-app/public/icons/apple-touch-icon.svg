@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" fill="none">
+  <rect width="180" height="180" rx="40" fill="#080C14"/>
+  <defs>
+    <linearGradient id="shieldGradApple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="50%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+    <linearGradient id="innerGradApple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+  </defs>
+  <path d="M90 24 L144 46 V90 C144 125 90 156 90 156 C90 156 36 125 36 90 V46 Z" fill="url(#shieldGradApple)" />
+  <path d="M90 32 L136 52 V89 C136 118 90 145 90 145 C90 145 44 118 44 89 V52 Z" fill="url(#innerGradApple)" />
+  <circle cx="90" cy="90" r="28" stroke="#06B6D4" stroke-width="3.5" opacity="0.35" />
+  <circle cx="90" cy="90" r="17" stroke="#3B82F6" stroke-width="3.5" opacity="0.75" />
+  <circle cx="90" cy="90" r="7" fill="#10B981" />
+  <path d="M90 60 V50 M90 120 V130 M60 90 H50 M120 90 H130" stroke="#06B6D4" stroke-width="3.5" stroke-linecap="round" />
+</svg>

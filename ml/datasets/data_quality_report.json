@@ -1,0 +1,70 @@
+{
+  "row_count": 26304,
+  "column_count": 13,
+  "missing_values": {
+    "total_missing_cells": 0,
+    "missing_percentage": 0.0,
+    "by_column": {
+      "timestamp": 0,
+      "temperature_c": 0,
+      "humidity_pct": 0,
+      "precipitation_mm": 0,
+      "rain_mm": 0,
+      "surface_pressure_hpa": 0,
+      "wind_speed_kmh": 0,
+      "weather_code": 0,
+      "latitude": 0,
+      "longitude": 0,
+      "data_source": 0,
+      "dataset_type": 0
+    }
+  },
+  "duplicates": {
+    "duplicate_timestamps": 0,
+    "exact_duplicates": 0
+  },
+  "invalid_values": {
+    "invalid_temperatures": 0,
+    "invalid_humidity": 0,
+    "invalid_pressure": 0,
+    "invalid_negative_rainfall": 0,
+    "invalid_wind_speeds": 0,
+    "total_violations": 0
+  },
+  "timestamp_checks": {
+    "is_monotonic": true,
+    "non_uniform_hour_steps": 0
+  },
+  "date_range": {
+    "start": "2022-01-01 00:00:00+00:00",
+    "end": "2024-12-31 23:00:00+00:00"
+  },
+  "geographic_range": {
+    "region": "Chennai Metropolitan Area, Tamil Nadu, India",
+    "latitude": 13.0827,
+    "longitude": 80.2707,
+    "elevation_m": 12.0
+  },
+  "meteorological_statistics": {
+    "temperature_c": {
+      "min": 18.2,
+      "mean": 28.1,
+      "max": 41.0
+    },
+    "surface_pressure_hpa": {
+      "min": 991.9,
+      "mean": 1007.3,
+      "max": 1018.0
+    },
+    "relative_humidity_pct": {
+      "min": 26.0,
+      "mean": 75.7,
+      "max": 100.0
+    },
+    "total_accumulated_precip_mm": 4677.1,
+    "max_hourly_precipitation_mm": 29.5,
+    "heavy_rainfall_hours_gte_10mm": 45,
+    "extreme_convective_hours_gte_50mm": 0
+  },
+  "validation_status": "PASSED"
+}

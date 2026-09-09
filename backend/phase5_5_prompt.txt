@@ -1,0 +1,2517 @@
+<USER_REQUEST>
+# AI-DisasterGuard — Phase 5.5
+
+## Disaster Operations Intelligence + Resource Optimization + Coordinated Response
+
+### MASTER IMPLEMENTATION INSTRUCTION
+
+You are working inside the existing **AI-DisasterGuard** repository.
+
+Project tagline:
+
+> **Predict Early. Warn Faster. Respond Smarter.**
+
+Phases 1–5.4 have already been implemented and verified.
+
+The current system includes:
+
+* Real historical ML
+* Multi-horizon forecasting
+* Uncertainty estimation
+* Geospatial flood intelligence
+* Historical flood memory
+* Adaptive alerts
+* Personalized risk communication
+* Persistent SOS
+* Multilingual voice SOS
+* AI emergency triage
+* Rescue-team recommendation
+* Human-confirmed dispatch
+* Real-time WebSockets
+* Command Centre
+* Citizen App
+* Offline-first emergency workflow
+* PostgreSQL/PostGIS
+* AI Emergency Agent with read-only tools
+
+**DO NOT rebuild the system.**
+
+**DO NOT replace existing architecture.**
+
+**DO NOT remove working features.**
+
+**DO NOT weaken existing safety barriers.**
+
+**DO NOT start Phase 5.6.**
+
+Implement ONLY:
+
+> **Phase 5.5 — Disaster Operations Intelligence + Resource Optimization + Coordinated Response**
+
+---
+
+# 1. PHASE 5.5 OBJECTIVE
+
+The objective is to transform the existing system from:
+
+> "Identify risk and recommend a rescue team"
+
+into:
+
+> **"Coordinate multiple simultaneous emergencies and optimize the use of available emergency resources."**
+
+The system should help the Command Centre answer:
+
+```text
+WHAT emergencies are active?
+WHICH incidents are most urgent?
+WHERE are resources currently located?
+WHICH rescue teams are available?
+WHAT capabilities are required?
+WHICH shelters have capacity?
+WHICH hospitals can receive patients?
+WHICH incidents should operators prioritize?
+WHICH team is the best candidate?
+WHAT resources are becoming overloaded?
+WHAT operational bottlenecks exist?
+```
+
+Target architecture:
+
+```text
+                  LIVE DISASTER INTELLIGENCE
+                           │
+                           ▼
+                ACTIVE RISK / ALERT ZONES
+                           │
+                           ▼
+                  CITIZEN SOS / INCIDENTS
+                           │
+                           ▼
+                     AI TRIAGE
+                           │
+                           ▼
+              INCIDENT PRIORITY ENGINE
+                           │
+             ┌─────────────┼─────────────┐
+             ▼             ▼             ▼
+       RESCUE TEAMS     SHELTERS      HOSPITALS
+             │             │             │
+             └─────────────┼─────────────┘
+                           ▼
+                 RESOURCE OPTIMIZATION
+                           │
+                           ▼
+                OPERATOR DECISION SUPPORT
+                           │
+                           ▼
+                  HUMAN CONFIRMATION
+                           │
+                           ▼
+                    DISPATCH / RESPONSE
+                           │
+                           ▼
+                 LIVE STATUS TRACKING
+                           │
+                           ▼
+                  OPERATIONAL ANALYTICS
+```
+
+---
+
+# 2. CRITICAL SAFETY INVARIANT
+
+This phase MUST preserve the existing Phase 3.5 human confirmation barrier.
+
+AI may:
+
+* rank incidents
+* recommend rescue teams
+* recommend shelters
+* recommend hospitals
+* identify resource bottlenecks
+* calculate operational priorities
+* explain recommendations
+* estimate geographic distances
+* suggest response plans
+
+AI MUST NOT:
+
+* autonomously dispatch
+* autonomously cancel a dispatch
+* autonomously reassign a rescue team
+* autonomously order evacuation
+* autonomously close a hospital
+* autonomously change rescue-team status
+* autonomously change alert severity
+* autonomously override an operator
+
+Required invariant:
+
+```text
+AI Recommendation
+        ≠
+Operational Action
+```
+
+Only an authorized human operator may execute operational actions.
+
+The following must NOT create a `RescueAssignment`:
+
+```text
+ML prediction
+forecast
+alert
+AI triage
+priority ranking
+resource optimizer
+background task
+WebSocket event
+simulation engine
+AI agent
+```
+
+Only explicit authorized human confirmation can create or modify a dispatch.
+
+---
+
+# 3. FIRST TASK — COMPLETE BASELINE AUDIT
+
+Before changing code inspect:
+
+```text
+backend/
+frontend/
+citizen-app/
+ml/
+database/
+communication/
+docs/
+scratch/
+```
+
+Audit:
+
+### Incidents
+
+* Incident model
+* SOS model
+* emergency updates
+* triage history
+* priority score
+* incident status
+
+### Rescue
+
+* RescueTeam
+* RescueAssignment
+* rescue capabilities
+* current team status
+* recommendation service
+* dispatch service
+* audit logs
+
+### Shelters
+
+* shelter model
+* capacity
+* occupancy
+* location
+* availability
+
+### Hospitals
+
+* hospital model
+* capacity
+* emergency capability
+* location
+* availability
+
+### GIS
+
+* PostGIS
+* distance calculations
+* risk zones
+* terrain
+* drainage
+* routing assumptions
+
+### Forecasting
+
+* Phase 5.3 forecasts
+* risk trajectory
+* uncertainty
+
+### Alerts
+
+* Phase 5.4 alerts
+* affected areas
+* severity
+* acknowledgement
+
+### AI
+
+* AI tools
+* triage
+* rescue recommendation
+* read-only architecture
+
+### Real-time
+
+* WebSocket manager
+* event system
+* dashboard updates
+
+### Citizen
+
+* SOS
+* status updates
+* offline queue
+* alerts
+
+Run:
+
+```bash
+pytest backend/tests/ -v
+npm run build
+cd citizen-app && npm run build
+```
+
+Run existing verification scripts for Phases 3.5–5.4.
+
+Create:
+
+```text
+docs/phase5_5_baseline_audit.md
+```
+
+Document the existing operational workflow and limitations.
+
+---
+
+# 4. INCIDENT PRIORITIZATION ENGINE
+
+Create or extend:
+
+```text
+ml/operations/
+```
+
+Suggested structure:
+
+```text
+ml/operations/
+├── __init__.py
+├── incident_priority.py
+├── resource_optimizer.py
+├── team_matching.py
+├── shelter_matching.py
+├── hospital_matching.py
+├── bottleneck.py
+├── response_plan.py
+└── operational_metrics.py
+```
+
+Reuse existing services wherever possible.
+
+Do not duplicate rescue recommendation logic.
+
+---
+
+# 5. INCIDENT PRIORITY SCORE
+
+Create an explainable operational priority score from:
+
+```text
+0–100
+```
+
+Potential factors:
+
+```text
+people_at_risk
+trapped_person
+medical_emergency
+immediate_threat
+flood severity
+current risk
+forecast trajectory
+location vulnerability
+incident age
+communication freshness
+location accuracy
+```
+
+Example:
+
+```text
+Trapped person       +30
+Medical emergency    +25
+Immediate threat     +20
+High flood risk      +10
+Increasing forecast  +10
+Incident age          +5
+--------------------------
+Maximum              100
+```
+
+Do not blindly use this exact weighting if existing triage logic already provides a validated structure.
+
+Audit and reuse existing scoring where appropriate.
+
+---
+
+# 6. OPERATIONAL PRIORITY LEVELS
+
+Define:
+
+```text
+CRITICAL
+HIGH
+MEDIUM
+LOW
+```
+
+Example:
+
+```text
+90–100 → CRITICAL
+70–89  → HIGH
+40–69  → MEDIUM
+0–39   → LOW
+```
+
+If existing thresholds differ, preserve existing semantics and document the final methodology.
+
+The Command Centre must be able to sort active incidents by operational priority.
+
+---
+
+# 7. PRIORITY EXPLANATION
+
+Every priority score must be explainable.
+
+Example:
+
+```text
+Operational Priority: 94 / 100
+
+Why?
+
+✓ Person reported trapped
+✓ Medical emergency reported
+✓ Immediate flood threat
+✓ High local flood susceptibility
+✓ Risk trajectory increasing
+✓ Incident has remained unresolved
+```
+
+Maintain the existing evidence taxonomy:
+
+```text
+FACT
+ML_PREDICTION
+GEOSPATIAL_DERIVATION
+AI_INTERPRETATION
+RECOMMENDATION
+```
+
+---
+
+# 8. MULTI-INCIDENT COMMAND CENTRE
+
+Upgrade the Command Centre to support simultaneous emergencies.
+
+Create or enhance:
+
+```text
+OperationsDashboard.tsx
+```
+
+Show:
+
+```text
+Active Emergencies
+Critical Emergencies
+High Priority
+Teams Available
+Teams Busy
+Teams En Route
+Shelter Capacity
+Hospital Capacity
+Unassigned Incidents
+Operational Bottlenecks
+```
+
+Add an incident queue:
+
+```text
+┌─────────────────────────────────────┐
+│ CRITICAL  #104  94/100              │
+│ Trapped + Medical Emergency         │
+│ 2 people at risk                    │
+│ 1.4 km from Team Alpha              │
+└─────────────────────────────────────┘
+```
+
+Operators should be able to:
+
+```text
+VIEW
+FILTER
+SORT
+REVIEW
+```
+
+Do not allow AI to perform operational actions automatically.
+
+---
+
+# 9. INCIDENT QUEUE
+
+Implement filters:
+
+```text
+ALL
+CRITICAL
+HIGH
+MEDIUM
+LOW
+UNASSIGNED
+ASSIGNED
+EN_ROUTE
+ON_SCENE
+RESOLVED
+```
+
+Sort options:
+
+```text
+Priority
+Incident age
+Distance to resource
+Number of people at risk
+Medical urgency
+Forecast risk
+```
+
+---
+
+# 10. RESCUE TEAM CAPABILITY MATCHING
+
+Reuse the existing rescue capability taxonomy:
+
+```text
+FLOOD_RESCUE
+BOAT_RESCUE
+MEDICAL
+EVACUATION
+URBAN_RESCUE
+SEARCH_AND_RESCUE
+HIGH_WATER
+FIRST_AID
+```
+
+For each incident determine:
+
+```text
+required capabilities
+preferred capabilities
+optional capabilities
+```
+
+Example:
+
+```text
+Incident:
+Flooding + trapped person + medical emergency
+
+Required:
+FLOOD_RESCUE
+MEDICAL
+
+Preferred:
+BOAT_RESCUE
+FIRST_AID
+```
+
+---
+
+# 11. RESOURCE MATCHING
+
+For each active incident calculate candidate resources.
+
+Factors:
+
+```text
+availability
+capability
+distance
+workload
+current assignment
+location freshness
+team capacity
+incident severity
+geographic risk
+```
+
+Use existing PostGIS capabilities where appropriate.
+
+Prefer:
+
+```text
+ST_DWithin
+ST_Distance
+ST_Intersects
+ST_Contains
+```
+
+Do not claim road travel time unless a real routing engine exists.
+
+If using straight-line/geographic distance, label:
+
+> Approx. geographic distance
+
+---
+
+# 12. RESOURCE UTILIZATION SCORE
+
+Calculate a transparent resource suitability score:
+
+```text
+0–100
+```
+
+Possible components:
+
+```text
+Capability Match
+Availability
+Distance
+Workload
+Capacity
+Location Freshness
+Operational Risk
+```
+
+Example:
+
+```text
+Team Alpha
+Capability: 100
+Availability: 100
+Distance: 85
+Workload: 90
+Freshness: 95
+
+Overall: 94
+```
+
+Expose the component breakdown.
+
+---
+
+# 13. MULTIPLE RESOURCE CANDIDATES
+
+For each critical incident provide:
+
+```text
+Primary Recommendation
+Alternative 1
+Alternative 2
+```
+
+Example:
+
+```text
+Recommended Team:
+Team Alpha
+
+Score:
+94 / 100
+
+Reasons:
+✓ Flood rescue capability
+✓ Medical capability
+✓ Available
+✓ Closest suitable team
+
+Warnings:
+⚠ Location update 12 minutes old
+```
+
+Never automatically assign the team.
+
+---
+
+# 14. RESOURCE CONTENTION
+
+This is a major Phase 5.5 capability.
+
+Detect when multiple incidents compete for the same rescue team.
+
+Example:
+
+```text
+Incident A → Team Alpha
+Incident B → Team Alpha
+Incident C → Team Alpha
+```
+
+The system should identify:
+
+> **Resource contention detected**
+
+Then recommend alternatives.
+
+Do NOT automatically reassign teams.
+
+---
+
+# 15. OPERATIONAL BOTTLENECK DETECTION
+
+Create:
+
+```text
+ml/operations/bottleneck.py
+```
+
+Detect:
+
+```text
+insufficient rescue teams
+insufficient medical capacity
+shelter capacity shortage
+multiple incidents in same area
+high-risk area with no nearby team
+communication degradation
+stale team locations
+hospital overload
+```
+
+Example:
+
+```text
+⚠ OPERATIONAL BOTTLENECK
+
+North Zone
+
+7 active critical incidents
+2 available rescue teams
+
+Coverage gap detected.
+```
+
+---
+
+# 16. SHELTER OPTIMIZATION
+
+For evacuation/support decisions, calculate suitable shelters.
+
+Inputs:
+
+```text
+distance
+capacity
+current occupancy
+availability
+risk zone overlap
+accessibility
+location safety
+```
+
+Output:
+
+```text
+Recommended Shelter
+Capacity Available
+Approx. Distance
+Risk Status
+Reason
+```
+
+Do not claim evacuation route safety unless validated.
+
+If routing is not implemented:
+
+> Approx. geographic distance
+
+not:
+
+> 8-minute travel time
+
+---
+
+# 17. HOSPITAL MATCHING
+
+For medical emergencies recommend suitable hospitals.
+
+Inputs:
+
+```text
+distance
+emergency capability
+capacity
+availability
+medical suitability
+risk exposure
+```
+
+Example:
+
+```text
+Hospital:
+City Emergency Hospital
+
+Emergency Capacity:
+AVAILABLE
+
+Medical Suitability:
+HIGH
+
+Approx. Geographic Distance:
+3.2 km
+```
+
+Do not claim actual bed availability unless the hospital data source is real.
+
+Clearly label:
+
+```text
+REAL
+CACHED
+MOCK
+SIMULATION
+```
+
+---
+
+# 18. RESPONSE PLAN GENERATION
+
+Create an explainable response-plan object.
+
+Example:
+
+```json
+{
+  "incident_id": 104,
+  "priority": "CRITICAL",
+  "recommended_team": "Team Alpha",
+  "alternative_team": "Team Bravo",
+  "recommended_shelter": "Shelter 3",
+  "recommended_hospital": "Hospital 1",
+  "reasons": [
+    "Trapped person",
+    "Medical emergency",
+    "High flood susceptibility",
+    "Team capability match"
+  ],
+  "warnings": [
+    "Team location is 12 minutes old"
+  ],
+  "human_confirmation_required": true
+}
+```
+
+This is a recommendation only.
+
+---
+
+# 19. HUMAN OPERATOR CONFIRMATION
+
+The Command Centre should provide:
+
+```text
+REVIEW RESPONSE PLAN
+```
+
+Then:
+
+```text
+Recommended Team
+Alternative Teams
+Incident Priority
+Reasoning
+Risk Context
+Shelter Recommendation
+Hospital Recommendation
+Warnings
+Data Freshness
+```
+
+Operator actions:
+
+```text
+CONFIRM DISPATCH
+OVERRIDE TEAM
+REJECT
+REQUEST MORE INFORMATION
+```
+
+Only `CONFIRM DISPATCH` can invoke the existing dispatch mechanism.
+
+---
+
+# 20. OPERATOR OVERRIDE
+
+Operators must be able to override the recommendation.
+
+Example:
+
+```text
+AI Recommendation:
+Team Alpha
+
+Operator chooses:
+Team Bravo
+
+Reason:
+Team Alpha is handling another emergency.
+```
+
+Record:
+
+```text
+operator_id
+original_recommendation
+selected_resource
+override_reason
+timestamp
+```
+
+Never hide operator overrides.
+
+---
+
+# 21. AUDIT LOGGING
+
+Every operational decision must be auditable.
+
+Log:
+
+```text
+recommendation_generated
+operator_reviewed
+operator_approved
+operator_rejected
+operator_overrode
+dispatch_confirmed
+resource_status_changed
+shelter_recommended
+hospital_recommended
+```
+
+Include:
+
+```text
+timestamp
+actor
+incident
+resource
+reason
+before_state
+after_state
+```
+
+Do not allow citizens to alter operational audit logs.
+
+---
+
+# 22. RESCUE TEAM STATUS LIFECYCLE
+
+Preserve existing statuses:
+
+```text
+AVAILABLE
+BUSY
+EN_ROUTE
+ON_SCENE
+OFFLINE
+UNAVAILABLE
+```
+
+Where appropriate support:
+
+```text
+AVAILABLE
+ ↓
+DISPATCHED
+ ↓
+EN_ROUTE
+ ↓
+ON_SCENE
+ ↓
+RESOLVED
+ ↓
+AVAILABLE
+```
+
+Do not silently change status.
+
+Human/operator authority is required for operational state changes unless the existing system explicitly supports trusted field status updates.
+
+---
+
+# 23. FIELD TEAM STATUS UPDATES
+
+If a rescue team has access to the system, allow operational updates such as:
+
+```text
+EN_ROUTE
+ON_SCENE
+RESCUE_STARTED
+RESCUE_COMPLETED
+NEED_ASSISTANCE
+UNABLE_TO_REACH
+```
+
+All status changes must be authenticated.
+
+If offline:
+
+```text
+LOCAL_QUEUED
+→
+SYNCED
+```
+
+Use the existing communication abstraction.
+
+---
+
+# 24. CITIZEN RESCUE STATUS
+
+After human-confirmed dispatch, the Citizen App may show:
+
+```text
+Rescue Team Assigned
+Team Status:
+EN ROUTE
+
+Last Update:
+2 minutes ago
+```
+
+If the team has not yet been dispatched:
+
+Do not show:
+
+> "Rescue team is coming."
+
+Instead show:
+
+> "Your emergency is being reviewed."
+
+After dispatch:
+
+> "A rescue team has been assigned."
+
+After EN_ROUTE:
+
+> "A rescue team is en route."
+
+Never fabricate team movement.
+
+---
+
+# 25. RESOURCE MAP
+
+Enhance the Command Centre map with:
+
+```text
+Active SOS
+Incidents
+Risk Zones
+Alert Zones
+Rescue Teams
+Shelters
+Hospitals
+```
+
+Add resource status filters.
+
+Example:
+
+```text
+Rescue Teams
+● AVAILABLE
+● BUSY
+● EN_ROUTE
+● ON_SCENE
+● OFFLINE
+```
+
+Use animated markers carefully.
+
+---
+
+# 26. RESOURCE COVERAGE ANALYSIS
+
+Calculate approximate emergency coverage.
+
+Example:
+
+```text
+North Zone
+Critical Incidents: 5
+Suitable Teams: 1
+
+Coverage:
+LOW
+```
+
+Another:
+
+```text
+Central Zone
+Critical Incidents: 2
+Suitable Teams: 5
+
+Coverage:
+GOOD
+```
+
+Use labels:
+
+```text
+LOW
+MODERATE
+GOOD
+```
+
+Avoid claiming real-world guaranteed coverage.
+
+---
+
+# 27. CAPACITY INTELLIGENCE
+
+Command Centre should show:
+
+```text
+Rescue Capacity
+Shelter Capacity
+Hospital Capacity
+```
+
+Example:
+
+```text
+Rescue Teams
+Available: 4 / 12
+
+Shelters
+Available Capacity: 420
+
+Hospitals
+Emergency Capacity: LIMITED
+```
+
+Clearly identify whether data is:
+
+```text
+REAL
+CACHED
+MOCK
+SIMULATION
+```
+
+---
+
+# 28. AI EMERGENCY AGENT
+
+Add read-only operational tools:
+
+```text
+get_active_incidents
+get_incident_priority
+get_resource_availability
+get_resource_contention
+get_operational_bottlenecks
+get_shelter_recommendations
+get_hospital_recommendations
+get_response_plan
+get_resource_coverage
+get_operational_metrics
+```
+
+The AI may answer:
+
+> "Which emergency should the operator review first?"
+
+> "Why is Incident #104 critical?"
+
+> "Which rescue teams are suitable?"
+
+> "Where is the largest resource bottleneck?"
+
+> "Which shelter has the most available capacity?"
+
+But the AI MUST NOT:
+
+```text
+dispatch
+reassign
+cancel
+override
+change status
+approve alerts
+issue evacuation orders
+```
+
+All tools are read-only.
+
+---
+
+# 29. AI RESPONSE FORMAT
+
+Operational AI responses should use:
+
+```text
+ANSWER
+EVIDENCE
+DATA FRESHNESS
+CONFIDENCE
+WARNINGS
+RECOMMENDATION
+HUMAN ACTION REQUIRED
+```
+
+Example:
+
+```text
+ANSWER:
+Incident #104 should receive immediate operator attention.
+
+EVIDENCE:
+• Person reported trapped
+• Medical emergency
+• Risk is HIGH
+• 6H forecast is increasing
+
+CONFIDENCE:
+High
+
+WARNING:
+Nearest team location is 12 minutes old.
+
+RECOMMENDATION:
+Review Team Alpha for dispatch.
+
+HUMAN ACTION REQUIRED:
+Operator confirmation required.
+```
+
+---
+
+# 30. OPERATIONAL OPTIMIZATION
+
+Implement a recommendation engine that considers the whole operational picture.
+
+Do not optimize only for shortest distance.
+
+Consider:
+
+```text
+incident priority
+team capability
+team workload
+distance
+resource contention
+shelter capacity
+hospital capacity
+geographic risk
+data freshness
+```
+
+The output is:
+
+> **Decision Support Recommendation**
+
+not:
+
+> **Automatic Assignment**
+
+---
+
+# 31. RESOURCE CONTENTION EXAMPLE
+
+The demo should show:
+
+```text
+Incident A
+Priority: 96
+Needs:
+Flood + Medical
+
+Team Alpha
+Best capability match
+Distance: 1.4 km
+
+Incident B
+Priority: 91
+Needs:
+Flood Rescue
+
+Team Alpha
+Distance: 0.9 km
+```
+
+The system should explain the conflict.
+
+Example:
+
+> Team Alpha is the best candidate for two incidents. Incident A has higher operational priority because a medical emergency and trapped person are reported.
+
+Then recommend alternatives for Incident B.
+
+The operator makes the final decision.
+
+---
+
+# 32. INCIDENT AGING
+
+Track unresolved incident age.
+
+Example:
+
+```text
+Incident #104
+Age: 18 minutes
+Priority: CRITICAL
+```
+
+Increase operational attention when incidents remain unresolved.
+
+Do not automatically change the emergency status merely because of age without documented policy.
+
+---
+
+# 33. OPERATIONAL ANALYTICS
+
+Add:
+
+```text
+Average Response Review Time
+Average Dispatch Time
+Active Incidents
+Resolved Incidents
+Unassigned Incidents
+Resource Utilization
+Critical Incidents
+Resource Contention Events
+Shelter Capacity Utilization
+Hospital Capacity Utilization
+```
+
+Do not fabricate historical operational metrics.
+
+Use only stored data.
+
+---
+
+# 34. REAL-TIME WEBSOCKET EVENTS
+
+Extend the existing event system with:
+
+```text
+INCIDENT_PRIORITY_UPDATED
+RESOURCE_RECOMMENDATION_UPDATED
+RESOURCE_CONTENTION_DETECTED
+OPERATIONAL_BOTTLENECK_DETECTED
+RESOURCE_STATUS_UPDATED
+SHELTER_CAPACITY_UPDATED
+HOSPITAL_CAPACITY_UPDATED
+RESPONSE_PLAN_UPDATED
+```
+
+Broadcast only after successful DB commit.
+
+Reuse the existing WebSocket manager.
+
+---
+
+# 35. DATABASE CHANGES
+
+Inspect existing schema first.
+
+If required, add tables such as:
+
+```text
+operational_recommendations
+resource_contentions
+operational_bottlenecks
+response_plans
+```
+
+Possible fields:
+
+### operational_recommendations
+
+```text
+id
+incident_id
+resource_type
+resource_id
+score
+reasoning
+warnings
+confidence
+data_freshness
+created_at
+status
+```
+
+### resource_contentions
+
+```text
+id
+resource_id
+incident_ids
+severity
+detected_at
+resolved_at
+```
+
+### operational_bottlenecks
+
+```text
+id
+zone
+bottleneck_type
+severity
+description
+detected_at
+resolved_at
+```
+
+### response_plans
+
+```text
+id
+incident_id
+recommended_team
+alternative_teams
+recommended_shelter
+recommended_hospital
+reasoning
+warnings
+confidence
+human_confirmation_required
+created_at
+```
+
+Use foreign keys and indexes.
+
+Use PostGIS for geographic fields where necessary.
+
+Create an Alembic migration.
+
+---
+
+# 36. API
+
+Add or extend:
+
+```text
+/api/v1/operations/
+```
+
+Suggested endpoints:
+
+```text
+GET  /api/v1/operations/overview
+GET  /api/v1/operations/incidents
+GET  /api/v1/operations/incidents/{id}/priority
+GET  /api/v1/operations/incidents/{id}/resources
+GET  /api/v1/operations/incidents/{id}/response-plan
+GET  /api/v1/operations/contentions
+GET  /api/v1/operations/bottlenecks
+GET  /api/v1/operations/coverage
+GET  /api/v1/operations/capacity
+GET  /api/v1/operations/analytics
+```
+
+Use RBAC.
+
+Suggested permissions:
+
+```text
+CITIZEN:
+view own emergency status
+
+RESCUE_TEAM:
+view assigned operational information
+update authorized field status
+
+OPERATOR:
+view all operational intelligence
+review recommendations
+confirm dispatch
+override recommendations
+
+ADMIN:
+configuration and administrative operations
+```
+
+---
+
+# 37. SECURITY
+
+Verify:
+
+* RBAC
+* authenticated operational actions
+* audit logging
+* input validation
+* no client-controlled priority score
+* no client-controlled team assignment
+* no unauthorized status changes
+* no arbitrary SQL
+* no AI mutation tools
+* no exposed PII
+* no exposed credentials
+* no frontend secrets
+
+Never trust:
+
+```text
+client priority
+client severity
+client resource score
+client dispatch request
+```
+
+Server must validate all operational decisions.
+
+---
+
+# 38. PRIVACY
+
+Operational intelligence should expose only the minimum citizen information needed.
+
+For Command Centre:
+
+Allow authorized operators to see:
+
+```text
+incident location
+emergency type
+people at risk
+medical urgency
+relevant emergency messages
+```
+
+Avoid exposing unnecessary:
+
+```text
+phone numbers
+private history
+unrelated personal data
+```
+
+Citizen App should only show the user's own emergency information.
+
+---
+
+# 39. OFFLINE / DEGRADED OPERATION
+
+Preserve existing offline architecture.
+
+If the Command Centre loses connectivity:
+
+```text
+cached operational state
++
+local UI indication
+```
+
+If a field team loses connectivity:
+
+```text
+LOCAL STATUS
+→
+LOCAL QUEUE
+→
+SYNC WHEN AVAILABLE
+```
+
+Never falsely claim remote synchronization during total communication blackout.
+
+Use:
+
+```text
+REAL
+CACHED
+OFFLINE
+MOCK
+SIMULATION
+```
+
+status indicators.
+
+---
+
+# 40. PREMIUM COMMAND CENTRE UX
+
+Create a high-quality emergency operations interface.
+
+Recommended layout:
+
+```text
+┌────────────────────────────────────────────────────────┐
+│ OPERATIONAL OVERVIEW                                   │
+├────────────┬────────────┬────────────┬────────────────┤
+│ CRITICAL   │ HIGH       │ TEAMS      │ SHELTER        │
+│ INCIDENTS  │ INCIDENTS  │ AVAILABLE  │ CAPACITY       │
+├────────────┴────────────┴────────────┴────────────────┤
+│                                                      │
+│                LIVE DISASTER MAP                    │
+│                                                      │
+├───────────────────────┬──────────────────────────────┤
+│ INCIDENT PRIORITY     │ RESOURCE RECOMMENDATION     │
+│ QUEUE                 │                              │
+├───────────────────────┼──────────────────────────────┤
+│ BOTTLENECKS           │ RESPONSE PLAN               │
+└───────────────────────┴──────────────────────────────┘
+```
+
+Use existing Motion components.
+
+Critical incidents can have controlled pulse/glow.
+
+Do not use excessive animation.
+
+Respect:
+
+```text
+prefers-reduced-motion
+```
+
+---
+
+# 41. RESPONSE PLAN PANEL
+
+For a selected incident display:
+
+```text
+INCIDENT #104
+
+Priority:
+CRITICAL — 94/100
+
+Situation:
+Trapped person + medical emergency
+
+Current Risk:
+HIGH
+
+6H Forecast:
+CRITICAL
+
+Recommended Team:
+Team Alpha — 94/100
+
+Alternative:
+Team Bravo — 81/100
+
+Shelter:
+Shelter 3
+
+Hospital:
+Hospital 1
+
+Warnings:
+⚠ Team Alpha location is 12 minutes old.
+
+Human confirmation required.
+
+[REVIEW & CONFIRM]
+[OVERRIDE]
+[REJECT]
+```
+
+Do not show a dispatched state until actual confirmation occurs.
+
+---
+
+# 42. CITIZEN APP
+
+Do not expose complex operational optimization.
+
+Citizen should see only:
+
+```text
+Emergency status
+Assigned team
+Team status
+Important instructions
+Shelter recommendation when relevant
+Hospital recommendation when relevant
+Emergency updates
+```
+
+Example:
+
+```text
+Your Emergency
+
+Status:
+RESCUE TEAM EN ROUTE
+
+Last Update:
+2 minutes ago
+
+Safety:
+Stay in a safe location if possible.
+Follow emergency instructions.
+```
+
+If no dispatch:
+
+```text
+Emergency status:
+UNDER REVIEW
+```
+
+Never fabricate an ETA.
+
+---
+
+# 43. SIMULATION MODE
+
+Extend the existing backend simulation.
+
+Do NOT create another simulation engine.
+
+Demonstration:
+
+```text
+NORMAL
+ ↓
+HEAVY RAINFALL
+ ↓
+FLOOD RISK INCREASE
+ ↓
+MULTI-HORIZON WARNING
+ ↓
+MULTIPLE CITIZEN SOS
+ ↓
+AI TRIAGE
+ ↓
+INCIDENT PRIORITIZATION
+ ↓
+RESOURCE CONTENTION
+ ↓
+BOTTLENECK DETECTION
+ ↓
+RESCUE TEAM RECOMMENDATIONS
+ ↓
+SHELTER RECOMMENDATION
+ ↓
+HOSPITAL RECOMMENDATION
+ ↓
+OPERATOR REVIEW
+ ↓
+HUMAN CONFIRMATION
+ ↓
+TEAM DISPATCH
+ ↓
+TEAM EN_ROUTE
+ ↓
+ON_SCENE
+ ↓
+INCIDENT RESOLVED
+```
+
+The demo should intentionally create at least two incidents competing for one resource.
+
+This demonstrates why Phase 5.5 is necessary.
+
+All generated records must be marked:
+
+```text
+SIMULATION
+```
+
+Reset must remove only simulation records.
+
+Never delete operational data.
+
+---
+
+# 44. REQUIRED SAFETY TEST
+
+Create:
+
+```text
+scratch/verify_phase5_5_safety.py
+```
+
+Explicitly prove:
+
+```text
+Forecast → 0 RescueAssignments
+Alert → 0 RescueAssignments
+AI Triage → 0 RescueAssignments
+Priority Engine → 0 RescueAssignments
+Resource Optimizer → 0 RescueAssignments
+AI Agent → 0 RescueAssignments
+```
+
+Then prove:
+
+```text
+Authorized Operator Confirmation
+→ exactly 1 valid assignment
+```
+
+Also test:
+
+```text
+Citizen → cannot dispatch
+Rescue Team → cannot arbitrarily dispatch another team
+AI → cannot dispatch
+Anonymous → cannot dispatch
+```
+
+---
+
+# 45. REQUIRED VERIFICATION SCRIPT
+
+Create:
+
+```text
+scratch/verify_phase5_5_operations.py
+```
+
+Target at least **65 verification gates**.
+
+Minimum:
+
+### Baseline
+
+1. Baseline passes
+2. Existing database preserved
+3. Existing SOS preserved
+4. Existing rescue workflow preserved
+
+### Incident priority
+
+5. Priority generated
+6. Score 0–100
+7. Level generated
+8. Explanation generated
+9. Trapped person increases priority
+10. Medical emergency increases priority
+11. Immediate threat increases priority
+12. Forecast context integrated
+13. Geographic context integrated
+14. Incident age integrated
+
+### Resource matching
+
+15. Candidate teams discovered
+16. Capability matching
+17. Availability filtering
+18. Geographic distance
+19. Workload consideration
+20. Location freshness
+21. Team score
+22. Primary recommendation
+23. Alternatives
+24. Warning generation
+
+### Resource contention
+
+25. Contention detected
+26. Competing incidents identified
+27. Higher-priority incident ranked
+28. Alternative resource suggested
+29. No automatic reassignment
+
+### Bottlenecks
+
+30. Rescue shortage detected
+31. Shelter shortage detected
+32. Hospital capacity warning
+33. stale resource detected
+34. coverage gap detected
+
+### Shelters
+
+35. shelter candidates
+36. capacity considered
+37. risk considered
+38. distance considered
+39. recommendation generated
+
+### Hospitals
+
+40. hospital candidates
+41. medical suitability
+42. capacity
+43. distance
+44. recommendation generated
+
+### Response plan
+
+45. response plan generated
+46. confidence
+47. warnings
+48. human confirmation required
+
+### Operator
+
+49. review
+50. confirm
+51. override
+52. reject
+53. audit record
+54. unauthorized confirmation blocked
+
+### Dispatch safety
+
+55. forecast no dispatch
+56. alert no dispatch
+57. AI triage no dispatch
+58. optimizer no dispatch
+59. AI agent no dispatch
+60. operator confirmation creates dispatch
+
+### Status
+
+61. team EN_ROUTE
+62. team ON_SCENE
+63. incident resolution
+64. citizen status update
+
+### Real-time
+
+65. recommendation event
+66. contention event
+67. bottleneck event
+68. resource status event
+
+### Database
+
+69. persistence
+70. foreign keys
+71. indexes
+72. migration
+
+### Frontend
+
+73. Operations dashboard
+74. incident queue
+75. resource panel
+76. bottleneck panel
+77. map integration
+78. citizen status
+79. production build
+
+If necessary, exceed 80 gates.
+
+---
+
+# 46. REGRESSION TESTING
+
+Run:
+
+```bash
+pytest backend/tests/ -v
+```
+
+Then:
+
+```bash
+python scratch/verify_phase3_part3_5_autodispatch_audit.py
+python scratch/verify_phase4_1_persistent_sos.py
+python scratch/verify_phase4_2_multilingual_voice.py
+python scratch/verify_phase5_1_real_ml.py
+python scratch/verify_phase5_2_flood_intelligence.py
+python scratch/verify_phase5_3_forecasting.py
+python scratch/verify_phase5_4_alert_intelligence.py
+python scratch/verify_phase5_5_operations.py
+python scratch/verify_phase5_5_safety.py
+```
+
+Run existing Phase 5.4 demo.
+
+Run the new Phase 5.5 demo.
+
+Then:
+
+```bash
+npm run build
+```
+
+and:
+
+```bash
+npm run build --prefix citizen-app
+```
+
+Expected:
+
+```text
+0 build errors
+0 TypeScript errors
+0 failed regressions
+```
+
+Do not weaken old tests.
+
+---
+
+# 47. FINAL END-TO-END DEMO
+
+Create:
+
+```text
+scratch/verify_phase5_5_demo.py
+```
+
+Verify:
+
+```text
+LIVE WEATHER
+      ↓
+REAL HISTORICAL ML
+      ↓
+MULTI-HORIZON FORECAST
+      ↓
+FLOOD INTELLIGENCE
+      ↓
+ADAPTIVE ALERT
+      ↓
+MULTIPLE CITIZEN SOS
+      ↓
+AI TRIAGE
+      ↓
+INCIDENT PRIORITIZATION
+      ↓
+RESOURCE CONTENTION
+      ↓
+BOTTLENECK DETECTION
+      ↓
+TEAM RECOMMENDATIONS
+      ↓
+SHELTER RECOMMENDATION
+      ↓
+HOSPITAL RECOMMENDATION
+      ↓
+COMMAND CENTRE REVIEW
+      ↓
+HUMAN CONFIRMATION
+      ↓
+DISPATCH
+      ↓
+EN_ROUTE
+      ↓
+ON_SCENE
+      ↓
+RESOLVED
+```
+
+The demo must show at least:
+
+```text
+2+ simultaneous incidents
+1+ resource contention event
+1+ operational bottleneck
+2+ candidate rescue teams
+1+ shelter recommendation
+1+ hospital recommendation
+1+ operator override or review
+```
+
+---
+
+# 48. OPERATIONAL METRICS
+
+Create:
+
+```text
+ml/operations/operational_metrics.py
+```
+
+Calculate only from actual stored data:
+
+```text
+active incidents
+critical incidents
+average incident age
+unassigned incidents
+available teams
+busy teams
+resource utilization
+resource contention
+bottlenecks
+resolved incidents
+dispatch count
+```
+
+Do not invent response-time improvements.
+
+Do not claim:
+
+> "AI reduced response time by 40%"
+
+unless an actual controlled evaluation proves it.
+
+---
+
+# 49. MODEL / ALGORITHM GOVERNANCE
+
+If Phase 5.5 uses optimization algorithms, clearly identify them.
+
+Acceptable approaches include:
+
+```text
+rule-based scoring
+weighted matching
+greedy candidate ranking
+constraint-aware recommendation
+```
+
+Do not call a weighted rule system:
+
+> "Deep Reinforcement Learning"
+
+unless genuinely implemented and evaluated.
+
+Do not introduce complex optimization unnecessarily.
+
+The goal is explainability and reliability.
+
+---
+
+# 50. DATA PROVENANCE
+
+Every operational recommendation must identify:
+
+```text
+REAL
+CACHED
+MOCK
+SIMULATION
+OFFLINE
+DERIVED
+```
+
+Example:
+
+```text
+Incident:
+REAL
+
+Weather:
+REAL
+
+Forecast:
+REAL_HISTORICAL_MODEL
+
+Flood Intelligence:
+DERIVED
+
+Team Location:
+CACHED
+
+Shelter Capacity:
+MOCK
+```
+
+This must be visible to operators.
+
+---
+
+# 51. AI SAFETY
+
+Audit the AI tool registry.
+
+Verify that Phase 5.5 tools are:
+
+```text
+READ ONLY
+```
+
+No tools may perform:
+
+```text
+dispatch
+reassignment
+status mutation
+alert publication
+evacuation order
+database mutation
+model mutation
+```
+
+The AI Emergency Agent remains a:
+
+> **Decision Support System**
+
+not an autonomous emergency commander.
+
+---
+
+# 52. PERFORMANCE
+
+Use:
+
+* PostgreSQL indexes
+* PostGIS spatial indexes
+* cached recommendations
+* controlled refresh
+* efficient candidate filtering
+* database aggregation
+* existing WebSocket infrastructure
+
+Avoid:
+
+* unnecessary microservices
+* Kafka
+* Kubernetes
+* distributed optimization infrastructure
+* excessive background jobs
+
+Keep the architecture suitable for an Ideathon prototype that can later scale.
+
+---
+
+# 53. DOCUMENTATION
+
+Create:
+
+```text
+docs/phase5_5_disaster_operations.md
+docs/phase5_5_resource_optimization.md
+docs/phase5_5_completion_report.md
+```
+
+Update:
+
+```text
+walkthrough.md
+```
+
+Add Phase 5.5 section.
+
+Document:
+
+* incident prioritization
+* resource matching
+* resource contention
+* bottleneck detection
+* shelter recommendation
+* hospital recommendation
+* response plan
+* operator workflow
+* override
+* audit logs
+* real-time events
+* database changes
+* APIs
+* AI tools
+* security
+* privacy
+* offline operation
+* simulation
+* verification
+* limitations
+
+---
+
+# 54. SCIENTIFIC AND OPERATIONAL HONESTY
+
+The documentation must explicitly state:
+
+1. Operational priority is a decision-support score.
+2. Resource recommendations are recommendations, not guaranteed optimal assignments.
+3. Geographic distance is not driving distance unless a routing engine is actually implemented.
+4. Shelter/hospital capacity may be simulated or stale depending on the data source.
+5. AI recommendations require human review.
+6. Rescue dispatch requires explicit authorized human confirmation.
+7. Resource coverage is an estimate, not a guarantee.
+8. Proxy inundation remains `PROXY_ESTIMATE`.
+9. Forecasts remain predictive risk estimates.
+10. Offline mode does not guarantee long-range communication without supporting infrastructure.
+11. No response-time improvement should be claimed without measured evidence.
+12. The system is a disaster decision-support prototype, not a certified emergency dispatch authority.
+
+---
+
+# 55. IDEATHON VALUE
+
+Phase 5.5 should directly strengthen the five judging criteria.
+
+## INNOVATION
+
+Demonstrate:
+
+> "AI-DisasterGuard doesn't stop at predicting where floods may occur. It continuously evaluates which emergencies require attention and how limited emergency resources could be coordinated."
+
+## PRACTICALITY
+
+Demonstrate:
+
+```text
+Multiple SOS
+      ↓
+AI Triage
+      ↓
+Priority Queue
+      ↓
+Resource Matching
+      ↓
+Bottleneck Detection
+      ↓
+Operator Decision
+      ↓
+Human-Confirmed Dispatch
+```
+
+## TECHNICAL FEASIBILITY
+
+Show:
+
+```text
+PostgreSQL/PostGIS
++
+Real Historical ML
++
+Multi-Horizon Forecasting
++
+Geospatial Intelligence
++
+Alert Intelligence
++
+AI Triage
++
+Resource Matching
++
+WebSockets
++
+PWA
+```
+
+## OUTREACH
+
+Show:
+
+```text
+Citizen App
++
+Multilingual Voice SOS
++
+Targeted Alerts
++
+Offline-first workflow
++
+Command Centre
+```
+
+## SCALABILITY
+
+Explain:
+
+```text
+1 district
+   ↓
+multiple districts
+   ↓
+state-level operations
+   ↓
+multi-hazard operations
+```
+
+with additional:
+
+```text
+rescue teams
+ambulances
+hospitals
+shelters
+communication gateways
+weather providers
+hazard models
+```
+
+without changing the core safety architecture.
+
+---
+
+# 56. FINAL ACCEPTANCE CRITERIA
+
+Phase 5.5 is complete ONLY when:
+
+* incident prioritization works
+* priority is explainable
+* multiple incidents can be handled
+* rescue capabilities are matched
+* resource availability is considered
+* geographic distance is considered
+* workload is considered
+* resource contention is detected
+* bottlenecks are detected
+* shelter recommendations work
+* hospital recommendations work
+* response plan is generated
+* operator review works
+* operator override works
+* audit logging works
+* resource status tracking works
+* citizen rescue status works
+* real-time events work
+* operational analytics work
+* AI tools are read-only
+* AI cannot dispatch
+* optimizer cannot dispatch
+* background jobs cannot dispatch
+* forecast cannot dispatch
+* alerts cannot dispatch
+* only authorized human confirmation can dispatch
+* PostgreSQL migration works
+* PostGIS queries work
+* RBAC works
+* privacy controls work
+* offline/degraded mode works
+* simulation works
+* simulation reset is safe
+* Phase 3.5 regression passes
+* Phase 4.1 regression passes
+* Phase 4.2 regression passes
+* Phase 5.1 regression passes
+* Phase 5.2 regression passes
+* Phase 5.3 regression passes
+* Phase 5.4 regression passes
+* Phase 5.5 tests pass
+* backend tests pass
+* Command Centre builds
+* Citizen App builds
+* no secrets exposed
+* documentation complete
+* limitations documented
+
+---
+
+# 57. FINAL COMPLETION REPORT
+
+Create:
+
+```text
+docs/phase5_5_completion_report.md
+```
+
+Include:
+
+```text
+Executive Summary
+Baseline Audit
+Incident Prioritization
+Resource Matching
+Resource Contention
+Bottleneck Detection
+Shelter Intelligence
+Hospital Intelligence
+Response Planning
+Human Confirmation
+Operator Override
+Audit Logging
+Real-Time Events
+Command Centre
+Citizen App
+AI Agent
+SOS Integration
+Database Changes
+API Changes
+Security
+Privacy
+Offline Operation
+Simulation
+Verification Results
+Regression Results
+Performance
+Known Limitations
+Ideathon Value
+Final Sign-Off
+```
+
+End with:
+
+```text
+PHASE 5.5 STATUS: COMPLETE
+```
+
+Include:
+
+```text
+Verification Suite                         Result
+----------------------------------------------------------
+Phase 5.5 Operations Gates                 XX / XX PASS
+Phase 5.5 Safety Gates                     XX / XX PASS
+Phase 5.5 End-to-End Demo                  PASS
+Phase 3.5 Auto-Dispatch Audit              PASS
+Phase 4.1 Persistent SOS                   PASS
+Phase 4.2 Multilingual Voice               PASS
+Phase 5.1 Real Historical ML               PASS
+Phase 5.2 Flood Intelligence               PASS
+Phase 5.3 Multi-Horizon Forecasting        PASS
+Phase 5.4 Adaptive Alert Intelligence      PASS
+Backend Tests                               PASS
+Command Centre Build                       PASS
+Citizen App Build                          PASS
+RBAC                                        PASS
+Privacy                                     PASS
+Human Confirmation Barrier                 PASS
+Scientific Honesty                         PASS
+```
+
+---
+
+# 58. FINAL STOP CONDITION
+
+When Phase 5.5 is complete:
+
+1. Run baseline tests.
+2. Implement Phase 5.5 incrementally.
+3. Run Phase 5.5 verification.
+4. Run all previous regression suites.
+5. Run safety tests.
+6. Run the multi-incident demo.
+7. Confirm PostgreSQL migration.
+8. Confirm PostGIS operation.
+9. Confirm Command Centre build.
+10. Confirm Citizen App build.
+11. Confirm AI tools are read-only.
+12. Confirm ZERO autonomous `RescueAssignment` creation.
+13. Confirm authorized human confirmation successfully dispatches.
+14. Confirm operator override is auditable.
+15. Confirm simulation reset is isolated.
+16. Confirm documentation.
+17. Update `walkthrough.md`.
+18. Produce final completion report.
+19. **STOP.**
+
+Do NOT start Phase 5.6.
+
+Do NOT redesign Phases 1–5.4.
+
+Do NOT add unrelated features.
+
+Do NOT claim guaranteed optimal resource allocation.
+
+Do NOT claim guaranteed response-time improvement.
+
+Do NOT claim autonomous emergency command.
+
+The final Phase 5.5 system should demonstrate:
+
+> **Predict Early. Warn Faster. Respond Smarter.**
+
+by connecting predictive disaster intelligence to **explainable multi-incident prioritization, resource coordination, operational bottleneck detection, and human-governed emergency response.**
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-08T22:47:05+05:30.
+</ADDITIONAL_METADATA>

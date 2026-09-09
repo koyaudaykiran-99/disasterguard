@@ -1,0 +1,206 @@
+{
+  "manifest_version": "1.0",
+  "last_updated": "2026-09-08T16:03:20.424042+00:00",
+  "active_models": {
+    "rainfall_classifier": "rainfall_classifier_v2",
+    "rainfall_regressor": "rainfall_regressor_v2",
+    "flood_intelligence": "flood_intelligence_v2",
+    "flood_classifier": "flood_classifier_v1",
+    "flood_depth_regressor": "flood_depth_regressor_v1",
+    "risk_forecast": "forecast_v1"
+  },
+  "models": [
+    {
+      "model_id": "rainfall_classifier_v2",
+      "model_name": "Heavy Rainfall Risk Classifier",
+      "version": "2.0.0",
+      "source_dataset": "historical_weather_chennai_2022_2024.csv",
+      "dataset_type": "REAL_HISTORICAL",
+      "features": [
+        "rainfall_1h",
+        "rainfall_3h",
+        "rainfall_6h",
+        "rainfall_12h",
+        "rainfall_24h",
+        "temperature",
+        "humidity",
+        "pressure",
+        "wind_speed",
+        "pressure_change_3h",
+        "humidity_trend_3h"
+      ],
+      "target": "rainfall_category",
+      "algorithm": "RandomForestClassifier",
+      "training_period": "2022-01-02T00:00 to 2024-02-07T06:00",
+      "test_period": "2024-07-20T12:00 to 2024-12-31T17:00",
+      "artifact_path": "ml/models/rainfall_classifier_v2.joblib",
+      "preprocessor_path": "ml/models/rainfall_preprocessor_v2.joblib",
+      "status": "ACTIVE",
+      "metrics": {
+        "accuracy": 0.8661,
+        "f1": 0.8798,
+        "dangerous_event_recall": 0.1875
+      }
+    },
+    {
+      "model_id": "rainfall_regressor_v2",
+      "model_name": "Rainfall Volume Continuous Regressor",
+      "version": "2.0.0",
+      "source_dataset": "historical_weather_chennai_2022_2024.csv",
+      "dataset_type": "REAL_HISTORICAL",
+      "features": [
+        "rainfall_1h",
+        "rainfall_3h",
+        "rainfall_6h",
+        "rainfall_12h",
+        "rainfall_24h",
+        "temperature",
+        "humidity",
+        "pressure",
+        "wind_speed",
+        "pressure_change_3h",
+        "humidity_trend_3h"
+      ],
+      "target": "predicted_rainfall_6h_mm",
+      "algorithm": "RandomForestRegressor",
+      "training_period": "2022-01-02T00:00 to 2024-02-07T06:00",
+      "test_period": "2024-07-20T12:00 to 2024-12-31T17:00",
+      "artifact_path": "ml/models/rainfall_regressor_v2.joblib",
+      "preprocessor_path": "ml/models/rainfall_preprocessor_v2.joblib",
+      "status": "ACTIVE",
+      "metrics": {
+        "mae_mm": 1.59,
+        "rmse_mm": 3.99,
+        "r2_score": 0.4079
+      }
+    },
+    {
+      "model_id": "flood_classifier_v1",
+      "model_name": "Flood Inundation Risk Classifier",
+      "version": "1.0.0",
+      "source_dataset": "disaster_training_data.csv",
+      "dataset_type": "SYNTHETIC",
+      "features": [
+        "rainfall_intensity_mm_h",
+        "cumulative_rainfall_24h",
+        "elevation_m",
+        "slope_deg",
+        "drainage_proximity_m",
+        "soil_saturation_pct"
+      ],
+      "target": "risk_level",
+      "algorithm": "RandomForestClassifier",
+      "training_period": "N/A (Physically Simulated)",
+      "test_period": "N/A (Physically Simulated)",
+      "artifact_path": "ml/models/flood_classifier.joblib",
+      "preprocessor_path": "ml/models/flood_preprocessor.joblib",
+      "status": "ACTIVE",
+      "metrics": {
+        "accuracy": 0.7486,
+        "f1": 0.742
+      }
+    },
+    {
+      "model_id": "flood_depth_regressor_v1",
+      "model_name": "Flood Water Depth Regressor",
+      "version": "1.0.0",
+      "source_dataset": "disaster_training_data.csv",
+      "dataset_type": "SYNTHETIC",
+      "features": [
+        "rainfall_intensity_mm_h",
+        "cumulative_rainfall_24h",
+        "elevation_m",
+        "slope_deg",
+        "drainage_proximity_m",
+        "soil_saturation_pct"
+      ],
+      "target": "water_depth_m",
+      "algorithm": "RandomForestRegressor",
+      "training_period": "N/A (Physically Simulated)",
+      "test_period": "N/A (Physically Simulated)",
+      "artifact_path": "ml/models/flood_depth_regressor.joblib",
+      "preprocessor_path": "ml/models/flood_preprocessor.joblib",
+      "status": "ACTIVE",
+      "metrics": {
+        "mae_meters": 0.18,
+        "rmse_meters": 0.26,
+        "r2_score": 0.8673
+      }
+    },
+    {
+      "model_id": "flood_intelligence_v2",
+      "model_name": "Geospatial Flood Susceptibility & Inundation Intelligence Engine",
+      "version": "2.1.0",
+      "source_dataset": "Chennai Topographic Benchmarks + Verified Historical Disasters + Drainage Network",
+      "dataset_type": "DERIVED_GEOSPATIAL",
+      "features": [
+        "rainfall_1h",
+        "rainfall_3h",
+        "rainfall_6h",
+        "rainfall_12h",
+        "rainfall_24h",
+        "elevation",
+        "slope",
+        "relative_elevation",
+        "nearest_drainage",
+        "distance_to_drainage_km",
+        "drainage_risk",
+        "historical_flood_score"
+      ],
+      "target": "flood_susceptibility_score (0-100) & proxy_depth_m",
+      "algorithm": "MultiFactorGeospatialRiskEngine",
+      "training_period": "Historical Flood Events (2015-2023) + ERA5-Land Reanalysis",
+      "test_period": "Chronological Evaluation Set (2024)",
+      "artifact_path": "ml/geospatial/susceptibility.py",
+      "preprocessor_path": "ml/geospatial/spatial_features.py",
+      "status": "ACTIVE_PRIMARY",
+      "metrics": {
+        "spatial_confidence": 0.82,
+        "depth_mode": "PROXY_ESTIMATE"
+      },
+      "scientific_disclaimer": "Evidence-based geospatial flood-risk prototype. Water depth is classified as PROXY_ESTIMATE; not a 2D hydrodynamic simulation."
+    },
+    {
+      "model_id": "forecast_v1",
+      "model_name": "Multi-Horizon Flood Risk & Early Warning Engine",
+      "version": "1.0.0",
+      "source_dataset": "ERA5-Land Reanalysis (2022-2024) + Open-Meteo NWP + Chennai Topographic Anchors",
+      "dataset_type": "EXPLAINABLE_FORECAST_ENGINE",
+      "features": [
+        "rainfall_1h",
+        "rainfall_3h",
+        "rainfall_6h",
+        "rainfall_12h",
+        "rainfall_24h",
+        "temperature",
+        "humidity",
+        "pressure",
+        "wind_speed",
+        "elevation",
+        "slope",
+        "nearest_drainage",
+        "distance_to_drainage_km",
+        "historical_flood_score"
+      ],
+      "target": "multi_horizon_risk (1H, 3H, 6H, 12H, 24H) & trajectory",
+      "algorithm": "ExplainableMultiHorizonForecastEngine",
+      "training_period": "ERA5-Land Reanalysis (2022-2024) + Verified Historical Disasters",
+      "test_period": "Multi-Horizon Evaluation Suite",
+      "artifact_path": "ml/forecasting/forecast_engine.py",
+      "preprocessor_path": "ml/forecasting/forecast_features.py",
+      "status": "ACTIVE",
+      "metrics": {
+        "spatial_coverage": "Greater Chennai Metropolitan Area",
+        "depth_mode": "PROXY_ESTIMATE",
+        "horizons": [
+          "1H",
+          "3H",
+          "6H",
+          "12H",
+          "24H"
+        ]
+      },
+      "scientific_disclaimer": "Multi-horizon predictive risk estimates and uncertainty-aware early warnings. Not a 2D hydrodynamic simulation."
+    }
+  ]
+}

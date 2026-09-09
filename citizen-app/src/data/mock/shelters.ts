@@ -1,0 +1,58 @@
+import { Shelter } from '../../types';
+
+export const mockShelters: Shelter[] = [
+  {
+    id: 'sh-01',
+    name: 'Guntur Municipal Indoor Stadium Shelter',
+    distanceKm: 1.4,
+    latitude: 13.089,
+    longitude: 80.276,
+    capacity: 1800,
+    currentOccupancy: 420,
+    status: 'OPEN',
+    address: 'Nagarampalem Main Road, Guntur',
+    phone: '+91 863 222 4501',
+    supplies: {
+      water: 92,
+      food: 88,
+      medical: 95,
+    },
+    isElevated: true,
+  },
+  {
+    id: 'sh-02',
+    name: 'Government Polytechnic High Ground Relief Camp',
+    distanceKm: 2.8,
+    latitude: 13.098,
+    longitude: 80.265,
+    capacity: 950,
+    currentOccupancy: 380,
+    status: 'OPEN',
+    address: 'Ring Road Sector 4, Guntur',
+    phone: '+91 863 223 7812',
+    supplies: {
+      water: 85,
+      food: 80,
+      medical: 75,
+    },
+    isElevated: true,
+  },
+  {
+    id: 'sh-03',
+    name: 'St. Ann Community Center & Safe Hall',
+    distanceKm: 4.1,
+    latitude: 13.072,
+    longitude: 80.285,
+    capacity: 650,
+    currentOccupancy: 590,
+    status: 'NEAR_CAPACITY',
+    address: 'Brodipet 4th Line, Guntur',
+    phone: '+91 863 234 1100',
+    supplies: {
+      water: 60,
+      food: 55,
+      medical: 70,
+    },
+    isElevated: false,
+  },
+];

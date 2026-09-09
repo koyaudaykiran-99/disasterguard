@@ -1,0 +1,54 @@
+{
+  "training_timestamp": "2026-09-08T14:43:35.305596+00:00",
+  "dataset_samples": 26274,
+  "data_provenance": "ECMWF ERA5-Land Historical Reanalysis (2022-2024) + Calibrated Hydrological Prototype",
+  "models": {
+    "rainfall_classifier": {
+      "test_accuracy": 0.8661,
+      "test_precision_weighted": 0.9009,
+      "test_recall_weighted": 0.8661,
+      "test_f1_weighted": 0.8798,
+      "dangerous_event_recall": 0.1875,
+      "confusion_matrix": [
+        [
+          3240,
+          351,
+          0,
+          1
+        ],
+        [
+          126,
+          168,
+          7,
+          1
+        ],
+        [
+          5,
+          27,
+          0,
+          3
+        ],
+        [
+          0,
+          7,
+          0,
+          6
+        ]
+      ]
+    },
+    "rainfall_regressor": {
+      "test_mae_mm": 1.59,
+      "test_rmse_mm": 3.99,
+      "test_r2_score": 0.4079
+    },
+    "flood_classifier": {
+      "accuracy": 0.7486,
+      "f1_weighted": 0.742
+    },
+    "flood_depth_regressor": {
+      "mae_meters": 0.18,
+      "rmse_meters": 0.26,
+      "r2_score": 0.8673
+    }
+  }
+}

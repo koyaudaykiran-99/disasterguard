@@ -1,0 +1,44 @@
+{
+  "dataset_name": "Chennai Regional Historical Meteorological Dataset",
+  "source": "Open-Meteo Historical Weather Archive API",
+  "scientific_model": "ECMWF ERA5 / ERA5-Land Reanalysis",
+  "source_url": "https://archive-api.open-meteo.com/v1/archive",
+  "download_date": "2026-09-06T12:03:40.500197+00:00",
+  "geographic_coverage": {
+    "region": "Chennai Metropolitan Area, Tamil Nadu, India",
+    "latitude": 13.0827,
+    "longitude": 80.2707
+  },
+  "temporal_coverage": {
+    "start_date": "2022-01-01",
+    "end_date": "2024-12-31",
+    "granularity": "1-hour"
+  },
+  "total_records": 26304,
+  "columns": [
+    "timestamp",
+    "temperature_c",
+    "humidity_pct",
+    "precipitation_mm",
+    "rain_mm",
+    "surface_pressure_hpa",
+    "wind_speed_kmh",
+    "weather_code",
+    "latitude",
+    "longitude",
+    "data_source",
+    "dataset_type"
+  ],
+  "units": {
+    "temperature_c": "degrees Celsius",
+    "humidity_pct": "percent (0-100)",
+    "precipitation_mm": "millimeters",
+    "rain_mm": "millimeters",
+    "surface_pressure_hpa": "hectopascals",
+    "wind_speed_kmh": "kilometers per hour",
+    "weather_code": "WMO standard synoptic weather code"
+  },
+  "license": "Creative Commons Attribution 4.0 International (CC BY 4.0) via Open-Meteo & ECMWF Copernicus",
+  "dataset_type": "historical_real",
+  "dataset_version": "v1.0-real-2022-2024"
+}

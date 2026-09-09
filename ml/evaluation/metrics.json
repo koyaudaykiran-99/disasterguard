@@ -1,0 +1,116 @@
+{
+  "timestamp": "2026-09-08T14:43:35.291665+00:00",
+  "dataset_name": "historical_weather_chennai_2022_2024.csv",
+  "dataset_type": "REAL_HISTORICAL",
+  "periods": {
+    "training": "2022-01-02T00:00 to 2024-02-07T06:00",
+    "validation": "2024-02-07T07:00 to 2024-07-20T11:00",
+    "test": "2024-07-20T12:00 to 2024-12-31T17:00"
+  },
+  "sample_counts": {
+    "train": 18391,
+    "validation": 3941,
+    "test": 3942
+  },
+  "models": {
+    "rainfall_classifier_v2": {
+      "algorithm": "RandomForestClassifier",
+      "version": "v2.0-real-data",
+      "status": "ACTIVE",
+      "metrics": {
+        "accuracy": 0.8661,
+        "precision": 0.9009,
+        "recall": 0.8661,
+        "f1": 0.8798,
+        "dangerous_event_recall": 0.1875,
+        "missed_dangerous": 39,
+        "actual_dangerous": 48,
+        "confusion_matrix": [
+          [
+            3240,
+            351,
+            0,
+            1
+          ],
+          [
+            126,
+            168,
+            7,
+            1
+          ],
+          [
+            5,
+            27,
+            0,
+            3
+          ],
+          [
+            0,
+            7,
+            0,
+            6
+          ]
+        ]
+      },
+      "feature_importance": {
+        "rainfall_24h": 0.1761,
+        "wind_speed": 0.1556,
+        "pressure": 0.1556,
+        "rainfall_12h": 0.1182,
+        "rainfall_6h": 0.0869,
+        "rainfall_3h": 0.075,
+        "temperature": 0.0615,
+        "humidity": 0.0562,
+        "rainfall_1h": 0.0413,
+        "pressure_change_3h": 0.0376,
+        "humidity_trend_3h": 0.0361
+      }
+    },
+    "rainfall_regressor_v2": {
+      "algorithm": "RandomForestRegressor",
+      "version": "v2.0-real-data",
+      "status": "ACTIVE",
+      "metrics": {
+        "mae_mm": 1.59,
+        "rmse_mm": 3.99,
+        "r2_score": 0.4079
+      },
+      "feature_importance": {
+        "wind_speed": 0.4425,
+        "rainfall_1h": 0.1241,
+        "pressure": 0.0946,
+        "rainfall_24h": 0.087,
+        "temperature": 0.0672,
+        "pressure_change_3h": 0.0384,
+        "humidity": 0.0378,
+        "rainfall_12h": 0.0364,
+        "humidity_trend_3h": 0.026,
+        "rainfall_3h": 0.0248,
+        "rainfall_6h": 0.0213
+      }
+    },
+    "flood_classifier_v1": {
+      "algorithm": "RandomForestClassifier",
+      "version": "v1.0-prototype",
+      "status": "ACTIVE (PROTOTYPE)",
+      "dataset_type": "SYNTHETIC",
+      "metrics": {
+        "accuracy": 0.7486,
+        "f1_weighted": 0.742
+      },
+      "disclaimer": "Current flood-depth model remains a synthetic-data prototype pending historical hydrological streamflow/gauge labels."
+    },
+    "flood_depth_regressor_v1": {
+      "algorithm": "RandomForestRegressor",
+      "version": "v1.0-prototype",
+      "status": "ACTIVE (PROTOTYPE)",
+      "dataset_type": "SYNTHETIC",
+      "metrics": {
+        "mae_meters": 0.18,
+        "rmse_meters": 0.26,
+        "r2_score": 0.8673
+      },
+      "disclaimer": "Current flood-depth model remains a synthetic-data prototype pending historical hydrological streamflow/gauge labels."
+    }
+  }
+}

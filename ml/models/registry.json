@@ -1,0 +1,273 @@
+{
+  "registry_version": "2.0",
+  "last_updated": "2026-09-08T16:03:20.421854+00:00",
+  "active_models": {
+    "rainfall_classifier": "rainfall_classifier_v2",
+    "rainfall_regressor": "rainfall_regressor_v2",
+    "flood_intelligence": "flood_intelligence_v2",
+    "flood_classifier": "flood_classifier_v1",
+    "flood_depth_regressor": "flood_depth_regressor_v1",
+    "risk_forecast": "forecast_v1"
+  },
+  "models": {
+    "rainfall_classifier_v2": {
+      "model_name": "Heavy Rainfall Risk Classifier",
+      "version": "v2.0-real-data",
+      "status": "active",
+      "artifact_file": "rainfall_classifier_v2.joblib",
+      "preprocessor_file": "rainfall_preprocessor_v2.joblib",
+      "algorithm": "RandomForestClassifier",
+      "training_dataset": "historical_weather_chennai_2022_2024.csv",
+      "data_source_type": "historical_real",
+      "training_date": "2026-09-08T14:43:35.300177+00:00",
+      "training_samples": 18391,
+      "validation_samples": 3941,
+      "test_samples": 3942,
+      "features": [
+        "rainfall_1h",
+        "rainfall_3h",
+        "rainfall_6h",
+        "rainfall_12h",
+        "rainfall_24h",
+        "temperature",
+        "humidity",
+        "pressure",
+        "wind_speed",
+        "pressure_change_3h",
+        "humidity_trend_3h"
+      ],
+      "classes": [
+        "LOW",
+        "MODERATE",
+        "HIGH",
+        "EXTREME"
+      ],
+      "metrics": {
+        "test_accuracy": 0.8661,
+        "test_precision_weighted": 0.9009,
+        "test_recall_weighted": 0.8661,
+        "test_f1_weighted": 0.8798,
+        "dangerous_event_recall": 0.1875,
+        "confusion_matrix": [
+          [
+            3240,
+            351,
+            0,
+            1
+          ],
+          [
+            126,
+            168,
+            7,
+            1
+          ],
+          [
+            5,
+            27,
+            0,
+            3
+          ],
+          [
+            0,
+            7,
+            0,
+            6
+          ]
+        ]
+      },
+      "feature_importance": {
+        "rainfall_24h": 0.1761,
+        "wind_speed": 0.1556,
+        "pressure": 0.1556,
+        "rainfall_12h": 0.1182,
+        "rainfall_6h": 0.0869,
+        "rainfall_3h": 0.075,
+        "temperature": 0.0615,
+        "humidity": 0.0562,
+        "rainfall_1h": 0.0413,
+        "pressure_change_3h": 0.0376,
+        "humidity_trend_3h": 0.0361
+      },
+      "scientific_disclaimer": "Trained and evaluated on genuine ECMWF ERA5-Land historical meteorological data (2022-2024)."
+    },
+    "rainfall_regressor_v2": {
+      "model_name": "Rainfall Volume Continuous Regressor",
+      "version": "v2.0-real-data",
+      "status": "active",
+      "artifact_file": "rainfall_regressor_v2.joblib",
+      "preprocessor_file": "rainfall_preprocessor_v2.joblib",
+      "algorithm": "RandomForestRegressor",
+      "training_dataset": "historical_weather_chennai_2022_2024.csv",
+      "data_source_type": "historical_real",
+      "training_date": "2026-09-08T14:43:35.300177+00:00",
+      "training_samples": 18391,
+      "test_samples": 3942,
+      "features": [
+        "rainfall_1h",
+        "rainfall_3h",
+        "rainfall_6h",
+        "rainfall_12h",
+        "rainfall_24h",
+        "temperature",
+        "humidity",
+        "pressure",
+        "wind_speed",
+        "pressure_change_3h",
+        "humidity_trend_3h"
+      ],
+      "target": "predicted_rainfall_6h_mm",
+      "metrics": {
+        "test_mae_mm": 1.59,
+        "test_rmse_mm": 3.99,
+        "test_r2_score": 0.4079
+      },
+      "feature_importance": {
+        "wind_speed": 0.4425,
+        "rainfall_1h": 0.1241,
+        "pressure": 0.0946,
+        "rainfall_24h": 0.087,
+        "temperature": 0.0672,
+        "pressure_change_3h": 0.0384,
+        "humidity": 0.0378,
+        "rainfall_12h": 0.0364,
+        "humidity_trend_3h": 0.026,
+        "rainfall_3h": 0.0248,
+        "rainfall_6h": 0.0213
+      },
+      "scientific_disclaimer": "Trained and evaluated on genuine ECMWF ERA5-Land historical meteorological data (2022-2024)."
+    },
+    "rainfall_classifier_v1": {
+      "model_name": "Heavy Rainfall Classifier (Prototype)",
+      "version": "v1.0-prototype",
+      "status": "retired",
+      "artifact_file": "rainfall_classifier.joblib",
+      "preprocessor_file": "rainfall_preprocessor.joblib",
+      "algorithm": "RandomForestClassifier",
+      "training_dataset": "disaster_training_data.csv",
+      "data_source_type": "synthetic_prototype",
+      "metrics": {
+        "accuracy": 0.8014,
+        "f1_weighted": 0.7997
+      }
+    },
+    "rainfall_regressor_v1": {
+      "model_name": "Rainfall Continuous Regressor (Prototype)",
+      "version": "v1.0-prototype",
+      "status": "retired",
+      "artifact_file": "rainfall_regressor.joblib",
+      "preprocessor_file": "rainfall_preprocessor.joblib",
+      "algorithm": "RandomForestRegressor",
+      "training_dataset": "disaster_training_data.csv",
+      "data_source_type": "synthetic_prototype",
+      "metrics": {
+        "mae_mm": 9.73,
+        "rmse_mm": 12.18,
+        "r2_score": 0.8198
+      }
+    },
+    "flood_classifier_v1": {
+      "model_name": "Flood Inundation Risk Classifier",
+      "version": "v1.0-prototype",
+      "status": "active",
+      "artifact_file": "flood_classifier.joblib",
+      "preprocessor_file": "flood_preprocessor.joblib",
+      "algorithm": "RandomForestClassifier",
+      "training_dataset": "disaster_training_data.csv",
+      "data_source_type": "synthetic_prototype",
+      "classes": [
+        "CRITICAL",
+        "HIGH",
+        "LOW",
+        "MODERATE"
+      ],
+      "metrics": {
+        "accuracy": 0.7486,
+        "f1_weighted": 0.742
+      },
+      "scientific_disclaimer": "Current flood-depth model remains a synthetic-data prototype pending historical hydrological streamflow/gauge labels."
+    },
+    "flood_depth_regressor_v1": {
+      "model_name": "Flood Water Depth Regressor",
+      "version": "v1.0-prototype",
+      "status": "active",
+      "artifact_file": "flood_depth_regressor.joblib",
+      "preprocessor_file": "flood_preprocessor.joblib",
+      "algorithm": "RandomForestRegressor",
+      "training_dataset": "disaster_training_data.csv",
+      "data_source_type": "synthetic_prototype",
+      "metrics": {
+        "mae_meters": 0.18,
+        "rmse_meters": 0.26,
+        "r2_score": 0.8673
+      },
+      "scientific_disclaimer": "Current flood-depth model remains a synthetic-data prototype pending historical hydrological streamflow/gauge labels."
+    },
+    "flood_intelligence_v2": {
+      "model_name": "Geospatial Flood Susceptibility & Inundation Intelligence Engine",
+      "version": "v2.1-geospatial",
+      "status": "active_primary",
+      "algorithm": "MultiFactorGeospatialRiskEngine",
+      "data_source_type": "derived_geospatial",
+      "features": [
+        "rainfall_1h",
+        "rainfall_3h",
+        "rainfall_6h",
+        "rainfall_12h",
+        "rainfall_24h",
+        "elevation",
+        "slope",
+        "relative_elevation",
+        "nearest_drainage",
+        "distance_to_drainage_km",
+        "drainage_risk",
+        "historical_flood_score"
+      ],
+      "metrics": {
+        "confidence_score": 0.82,
+        "spatial_coverage": "Greater Chennai Metropolitan Area (CMDA)",
+        "depth_estimation_mode": "PROXY_ESTIMATE"
+      },
+      "scientific_disclaimer": "Evidence-based geospatial flood-risk and inundation intelligence prototype. Depth is classified as PROXY_ESTIMATE; not a 2D hydrodynamic hydraulic simulation."
+    },
+    "forecast_v1": {
+      "model_name": "Multi-Horizon Flood Risk & Early Warning Engine",
+      "version": "v1.0-forecasting",
+      "status": "active",
+      "algorithm": "ExplainableMultiHorizonForecastEngine",
+      "data_source_type": "EXPLAINABLE_FORECAST_ENGINE",
+      "horizons": [
+        "1H",
+        "3H",
+        "6H",
+        "12H",
+        "24H"
+      ],
+      "features": [
+        "rainfall_1h",
+        "rainfall_3h",
+        "rainfall_6h",
+        "rainfall_12h",
+        "rainfall_24h",
+        "temperature",
+        "humidity",
+        "pressure",
+        "wind_speed",
+        "pressure_change_3h",
+        "humidity_trend_3h",
+        "elevation",
+        "slope",
+        "relative_elevation",
+        "nearest_drainage",
+        "distance_to_drainage_km",
+        "drainage_risk",
+        "historical_flood_score"
+      ],
+      "metrics": {
+        "confidence_high_tier_accuracy": 0.84,
+        "depth_mode": "PROXY_ESTIMATE",
+        "horizons_supported": 5
+      },
+      "scientific_disclaimer": "Multi-horizon risk estimates and early warnings. Depth labeled PROXY_ESTIMATE; not a 2D hydrodynamic simulation."
+    }
+  }
+}

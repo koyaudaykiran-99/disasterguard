@@ -1,0 +1,40 @@
+import { Hospital } from '../../types';
+
+export const mockHospitals: Hospital[] = [
+  {
+    id: 'hosp-01',
+    name: 'Government General Hospital (GGH) Trauma Care',
+    distanceKm: 1.8,
+    latitude: 13.081,
+    longitude: 80.282,
+    type: 'TRAUMA_CENTER',
+    availableBeds: 46,
+    phone: '+91 863 222 3456',
+    address: 'Opp. Collectorate, Sambasiva Pet, Guntur',
+    emergencyDepartmentOpen: true,
+  },
+  {
+    id: 'hosp-02',
+    name: 'Ramesh Emergency & Multi-Speciality Center',
+    distanceKm: 3.2,
+    latitude: 13.094,
+    longitude: 80.268,
+    type: 'GENERAL',
+    availableBeds: 28,
+    phone: '+91 863 237 7777',
+    address: 'Collector Office Road, Guntur',
+    emergencyDepartmentOpen: true,
+  },
+  {
+    id: 'hosp-03',
+    name: 'Apollo First Med Emergency Clinic',
+    distanceKm: 4.5,
+    latitude: 13.068,
+    longitude: 80.274,
+    type: 'PRIMARY_HEALTH',
+    availableBeds: 12,
+    phone: '+91 863 224 8899',
+    address: 'Arundelpet Main Road, Guntur',
+    emergencyDepartmentOpen: true,
+  },
+];
