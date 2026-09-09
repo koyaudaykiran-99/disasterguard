@@ -30,6 +30,9 @@ class WebSocketService {
       const clean = envUrl.replace(/\/$/, '').replace(/^http/, 'ws');
       return `${clean}/api/v1/ws`;
     }
+    if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      return 'wss://ai-disasterguard-backend.onrender.com/api/v1/ws';
+    }
     const loc = window.location;
     const proto = loc.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = loc.hostname || 'localhost';

@@ -9,6 +9,9 @@ const getApiBase = (): string => {
   if (envUrl) {
     return `${envUrl.replace(/\/$/, '')}/api/v1`;
   }
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return 'https://ai-disasterguard-backend.onrender.com/api/v1';
+  }
   return '/api/v1';
 };
 
