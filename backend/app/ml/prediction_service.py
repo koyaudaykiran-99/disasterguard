@@ -48,6 +48,29 @@ class DisasterMLService:
         self.fallback_active = False
         self.load_models()
 
+    @staticmethod
+    def _patch_imputer(obj):
+        """Ensure unpickled scikit-learn SimpleImputer instances have _fill_dtype set for cross-version compatibility."""
+        if obj is None:
+            return
+        pipeline = getattr(obj, "pipeline", obj)
+        if hasattr(pipeline, "named_steps"):
+            for step in pipeline.named_steps.values():
+                DisasterMLService._patch_imputer(step)
+        if hasattr(pipeline, "steps"):
+            for name, step in pipeline.steps:
+                DisasterMLService._patch_imputer(step)
+        if hasattr(pipeline, "transformers_"):
+            for tr in pipeline.transformers_:
+                if len(tr) > 1:
+                    DisasterMLService._patch_imputer(tr[1])
+        if (obj.__class__.__name__ == "SimpleImputer" or hasattr(obj, "statistics_")) and not hasattr(obj, "_fill_dtype"):
+            try:
+                import numpy as np
+                setattr(obj, "_fill_dtype", np.dtype("float64"))
+            except Exception:
+                pass
+
     def load_models(self) -> bool:
         try:
             self.model_mode = os.environ.get("ML_MODEL_MODE", "REAL_HISTORICAL").upper()
@@ -133,6 +156,9 @@ class DisasterMLService:
             self.flood_depth_reg = joblib.load(f_reg_path)
             self.flood_preprocessor = joblib.load(f_prep_path)
 
+            self._patch_imputer(self.rainfall_preprocessor)
+            self._patch_imputer(self.flood_preprocessor)
+
             metrics_path = os.path.join(MODELS_DIR, "model_metrics.json")
             if os.path.exists(metrics_path):
                 with open(metrics_path, "r", encoding="utf-8") as f:
@@ -201,6 +227,7 @@ class DisasterMLService:
 
         if self.is_loaded and self.rainfall_clf is not None:
             # Transform
+            self._patch_imputer(self.rainfall_preprocessor)
             X_scaled = self.rainfall_preprocessor.transform(input_df)
             
             # Predict category and class probabilities
@@ -317,6 +344,7 @@ class DisasterMLService:
         }])
 
         if self.is_loaded and self.flood_clf is not None:
+            self._patch_imputer(self.flood_preprocessor)
             X_scaled = self.flood_preprocessor.transform(input_df)
             
             # Predict risk category and probabilities
