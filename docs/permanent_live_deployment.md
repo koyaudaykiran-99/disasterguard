@@ -21,9 +21,9 @@ AI-DisasterGuard is designed for permanent, enterprise-grade cloud deployment ac
 ┌───────────────────────────────┐ ┌──────────────────┐ ┌───────────────────────────────┐
 │ RENDER POSTGRESQL + POSTGIS   │ │ RENDER FASTAPI   │ │ VERCEL FRONTENDS              │
 │ - Database: disasterguard     │ │ - Python 3.9     │ │ 1. Command Centre (Root)      │
-│ - PostGIS 3.4 Spatial Ext     │ │ - Port: $PORT    │ │    https://command-centre.app │
+│ - PostGIS 3.4 Spatial Ext     │ │ - Port: $PORT    │ │    https://disasterguard-g3lzq274n-koyaudaykiran-99.vercel.app │
 │ - Connection: DATABASE_URL    │ │ - Alembic Head   │ │ 2. Citizen App (citizen-app/) │
-│ - Auto Seed Reference POIs    │ │ - WSS & REST     │ │    https://citizen-guard.app  │
+│ - Auto Seed Reference POIs    │ │ - WSS & REST     │ │    https://citizen-app-iota.vercel.app  │
 └───────────────────────────────┘ └──────────────────┘ └───────────────────────────────┘
 ```
 
@@ -72,7 +72,7 @@ The repository includes a ready-to-use [`render.yaml`](file:///c:/Users/koyau/.g
    - Execute `cd backend && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
    - Seed reference shelters, hospitals, rescue teams, and baseline risk zones.
 7. Once deployed, note your permanent backend URL:
-   `https://ai-disasterguard-backend-xxxx.onrender.com`
+   `https://ai-disasterguard-backend.onrender.com`
 
 ---
 
@@ -86,11 +86,11 @@ The repository includes a ready-to-use [`render.yaml`](file:///c:/Users/koyau/.g
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
 5. Expand **Environment Variables** and add:
-   - `VITE_API_URL`: `https://<YOUR-RENDER-BACKEND-URL>` (e.g. `https://ai-disasterguard-backend-xxxx.onrender.com`)
+   - `VITE_API_URL`: `https://<YOUR-RENDER-BACKEND-URL>` (e.g. `https://ai-disasterguard-backend.onrender.com`)
    - `VITE_WS_URL`: `wss://<YOUR-RENDER-BACKEND-URL>/api/v1/ws`
 6. Click **Deploy**.
 7. Note your permanent Command Centre URL:
-   `https://disaster-guard-xxxx.vercel.app`
+   `https://disasterguard-g3lzq274n-koyaudaykiran-99.vercel.app`
 
 ---
 
@@ -108,7 +108,7 @@ The repository includes a ready-to-use [`render.yaml`](file:///c:/Users/koyau/.g
    - `VITE_WS_URL`: `wss://<YOUR-RENDER-BACKEND-URL>/api/v1/ws`
 5. Click **Deploy**.
 6. Note your permanent Citizen App URL:
-   `https://disaster-guard-citizen-xxxx.vercel.app`
+   `https://citizen-app-iota.vercel.app`
 
 ---
 
@@ -116,7 +116,7 @@ The repository includes a ready-to-use [`render.yaml`](file:///c:/Users/koyau/.g
 1. Go to your Render Dashboard $	o$ select `ai-disasterguard-backend` $	o$ **Environment**.
 2. Update the `CORS_ORIGINS` environment variable to strictly permit the production frontends:
    ```json
-   ["https://disaster-guard-xxxx.vercel.app", "https://disaster-guard-citizen-xxxx.vercel.app"]
+   ["https://disasterguard-g3lzq274n-koyaudaykiran-99.vercel.app", "https://citizen-app-iota.vercel.app"]
    ```
 3. Click **Save Changes**. Render will automatically redeploy the backend with locked CORS origins.
 
