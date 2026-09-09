@@ -9,16 +9,16 @@ export default {
     extend: {
       colors: {
         citizen: {
-          bg: '#F8FAFC',
-          surface: '#FFFFFF',
-          'surface-elevated': '#FFFFFF',
-          'surface-glass': 'rgba(255, 255, 255, 0.9)',
-          border: '#E2E8F0',
+          bg: '#0F172A',
+          surface: '#1E293B',
+          'surface-elevated': '#334155',
+          'surface-glass': 'rgba(30, 41, 59, 0.85)',
+          border: '#334155',
           'border-subtle': 'rgba(226, 232, 240, 0.8)',
-          'text-primary': '#0F172A',
-          'text-secondary': '#475569',
+          'text-primary': '#F8FAFC',
+          'text-secondary': '#94A3B8',
           'text-muted': '#64748B',
-          accent: '#2563EB',
+          accent: '#38BDF8',
         },
         risk: {
           low: '#10B981',

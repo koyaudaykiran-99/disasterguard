@@ -35,18 +35,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate }) => 
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 min-h-screen flex flex-col justify-between p-4 relative z-30 select-none shadow-sm">
+    <aside className="w-64 bg-command-sidebar/95 border-r border-command-border/80 min-h-screen flex flex-col justify-between p-4 relative z-30 select-none backdrop-blur-md">
       <div>
         {/* Brand Header */}
         <div className="flex items-center space-x-3 px-2 py-3 mb-6">
-          <div className="p-2.5 rounded-2xl bg-blue-50 border border-blue-200 text-blue-600 shadow-sm">
+          <div className="p-2.5 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-400">
             <Flame className="w-6 h-6 animate-pulse" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-slate-900 tracking-wider font-mono uppercase">
+            <h1 className="text-base font-bold text-white tracking-wider font-mono uppercase">
               DISASTERGUARD
             </h1>
-            <span className="text-[10px] font-mono text-blue-600 font-bold tracking-widest block">
+            <span className="text-[10px] font-mono text-sky-400 font-bold tracking-widest block">
               AI COMMAND SYSTEM
             </span>
           </div>
@@ -65,7 +65,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate }) => 
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-200 ${
                   isActive
                     ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-sm font-bold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 border border-transparent'
+                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60/80 border border-transparent'
                 }`}
               >
                 <div className="flex items-center space-x-3">
@@ -111,7 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate }) => 
             <Activity className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
             ML Pipeline
           </span>
-          <span className="text-[10px] font-mono text-blue-600 font-bold">v4.2 HIGH</span>
+          <span className="text-[10px] font-mono text-sky-400 font-bold">v4.2 HIGH</span>
         </div>
       </div>
     </aside>

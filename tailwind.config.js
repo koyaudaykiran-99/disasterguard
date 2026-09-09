@@ -8,13 +8,13 @@ export default {
     extend: {
       colors: {
         command: {
-          bg: '#F8FAFC',
-          card: '#FFFFFF',
-          header: '#FFFFFF',
-          sidebar: '#FFFFFF',
-          border: '#E2E8F0',
-          accent: '#2563EB',
-          subtle: '#F1F5F9',
+          bg: '#0b0f17',
+          card: '#0f172a',
+          header: '#0f172a',
+          sidebar: '#0f172a',
+          border: '#1e293b',
+          accent: '#38bdf8',
+          subtle: '#1e293b',
         },
         risk: {
           low: '#10b981',

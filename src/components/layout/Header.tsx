@@ -32,14 +32,14 @@ export const Header: React.FC = () => {
   const stageLabel = STAGE_LABELS[simulationStep] || simulationStage || 'NORMAL';
 
   return (
-    <header className="bg-white/95 border-b border-slate-200/90 px-6 py-3.5 flex items-center justify-between sticky top-0 z-20 backdrop-blur-md shadow-sm">
+    <header className="bg-command-header/90 border-b border-command-border/80 px-6 py-3.5 flex items-center justify-between sticky top-0 z-20 backdrop-blur-md shadow-sm">
       {/* Left Title & Status Ticker */}
       <div className="flex items-center space-x-4">
         {/* Real-Time WebSocket Connection Badge */}
         <RealTimeStatusBadge status={connectionStatus} onReconnect={reconnectWebSocket} />
 
-        <div className="hidden md:flex items-center space-x-2 px-3 py-1 rounded-xl bg-slate-100/90 border border-slate-200 text-[11px] font-mono text-slate-600 shadow-inner">
-          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+        <div className="hidden md:flex items-center space-x-2 px-3 py-1 rounded-xl bg-slate-800/80 border border-slate-700/80 text-[11px] font-mono text-slate-300">
+          <Sparkles className="w-3.5 h-3.5 text-sky-400" />
           <span>Spatial PostGIS ST_DWithin Active</span>
         </div>
 
@@ -129,12 +129,12 @@ export const Header: React.FC = () => {
 
         {/* User Badge */}
         <div className="flex items-center space-x-2.5 pl-3 border-l border-slate-200">
-          <div className="w-8 h-8 rounded-xl bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-600 font-bold text-xs shadow-sm">
+          <div className="w-8 h-8 rounded-xl bg-blue-100 border border-blue-200 flex items-center justify-center text-sky-400 font-bold text-xs shadow-sm">
             <User className="w-4 h-4" />
           </div>
           <div className="hidden lg:block text-left">
             <div className="text-xs font-semibold text-slate-900">{user.name}</div>
-            <div className="text-[10px] font-mono text-slate-500">{user.role}</div>
+            <div className="text-[10px] font-mono text-slate-400">{user.role}</div>
           </div>
         </div>
       </div>
