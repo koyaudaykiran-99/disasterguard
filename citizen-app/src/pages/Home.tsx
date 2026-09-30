@@ -12,6 +12,7 @@ import { LatestAlertCard } from '../components/home/LatestAlertCard';
 import { CommunicationStatus } from '../components/home/CommunicationStatus';
 import { OfflineBanner } from '../components/connectivity/OfflineBanner';
 import { LocationBanner } from '../components/location/LocationBanner';
+import { CitizenWeatherCard } from '../components/weather/CitizenWeatherCard';
 import { riskRepository } from '../storage/repositories/riskRepository';
 import { alertRepository } from '../storage/repositories/alertRepository';
 import { mockSafetyStatus } from '../data/mock/risk';
@@ -103,6 +104,11 @@ export const Home: React.FC = () => {
         {/* Step 1: GPS Location Acquisition Banner */}
         <motion.div variants={reducedMotion ? undefined : openingItemVariants}>
           <LocationBanner />
+        </motion.div>
+
+        {/* Real-Time Emergency Weather Feed */}
+        <motion.div variants={reducedMotion ? undefined : openingItemVariants}>
+          <CitizenWeatherCard />
         </motion.div>
 
         {/* Step 2: Hero Safety Status Card (Springs 0 -> 18 with Data Freshness Tag) */}

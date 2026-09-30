@@ -28,13 +28,17 @@ class Settings(BaseSettings):
     GPT_ASTRA_API_KEY: str = ""
     OPENAI_API_KEY: str = ""
     
-    # Meteorological Provider & Simulation
+    # Meteorological Provider & Multi-Source Configuration
     WEATHER_PROVIDER: str = "real"  # "real", "cached", "mock", "simulation"
     WEATHER_API_KEY: str = ""
+    OPENWEATHER_API_KEY: str = ""
+    IMD_API_KEY: str = ""
+    IMD_API_BASE_URL: str = "https://mausam.imd.gov.in/api"
     WEATHER_API_BASE_URL: str = "https://api.open-meteo.com/v1"
     WEATHER_LATITUDE: float = 13.0827  # Default Chennai coordinates
     WEATHER_LONGITUDE: float = 80.2707
-    WEATHER_CACHE_MINUTES: int = 15
+    WEATHER_CACHE_MINUTES: int = 3
+    RADAR_TILE_PROVIDER: str = "rainviewer"
     ENABLE_REAL_NOTIFICATIONS: bool = False  # Safety constraint: never send real public alerts
     FIREBASE_PROJECT_ID: str = "disasterguard-ideathon-demo"
     MODEL_MODE: str = "production"  # "demo" or "production"

@@ -283,22 +283,39 @@ export interface BackendRescueDispatchAudit {
 
 export interface BackendWeatherObservation {
   id: number;
-  location: string;
+  location: string | { lat: number; lon: number; city?: string };
+  location_name?: string;
+  provider?: string;
+  rainfall_mm?: number;
+  rainfall_intensity_mm_h?: number;
   rainfall_1h: number;
   rainfall_3h: number;
   rainfall_6h: number;
   rainfall_24h: number;
   temperature: number;
+  temperature_c?: number;
   humidity: number;
   wind_speed: number;
+  wind_speed_kmh?: number;
   pressure: number;
+  pressure_hpa?: number;
   observed_at: string;
+  timestamp?: string;
   latitude?: number;
   longitude?: number;
   condition?: string;
+  weather_condition?: string;
   source?: 'real' | 'cached' | 'mock' | 'simulation' | string;
   precipitation_probability?: number;
+  rain_probability?: number;
+  visibility_km?: number;
+  alert_level?: string;
   is_demo?: boolean;
+  is_cached?: boolean;
+  cached_at?: string;
+  data_freshness?: string;
+  alerts?: string[];
+  official_warnings?: any[];
 }
 
 export interface TopContributor {
@@ -560,6 +577,25 @@ export const disasterService = {
   getCurrentWeather: async (lat?: number, lng?: number): Promise<BackendWeatherObservation> => {
     const query = lat !== undefined && lng !== undefined ? `?latitude=${lat}&longitude=${lng}` : '';
     return fetchWithRetry<BackendWeatherObservation>(`${API_BASE}/weather/current${query}`);
+  },
+
+  getWeatherForecast: async (lat?: number, lng?: number, hours = 24): Promise<any> => {
+    const query = lat !== undefined && lng !== undefined ? `?latitude=${lat}&longitude=${lng}&hours=${hours}` : `?hours=${hours}`;
+    return fetchWithRetry<any>(`${API_BASE}/weather/forecast${query}`);
+  },
+
+  getWeatherAlerts: async (lat?: number, lng?: number): Promise<any> => {
+    const query = lat !== undefined && lng !== undefined ? `?latitude=${lat}&longitude=${lng}` : '';
+    return fetchWithRetry<any>(`${API_BASE}/weather/alerts${query}`);
+  },
+
+  getWeatherRainfall: async (lat?: number, lng?: number): Promise<any> => {
+    const query = lat !== undefined && lng !== undefined ? `?latitude=${lat}&longitude=${lng}` : '';
+    return fetchWithRetry<any>(`${API_BASE}/weather/rainfall${query}`);
+  },
+
+  getWeatherStatus: async (): Promise<any> => {
+    return fetchWithRetry<any>(`${API_BASE}/weather/status`);
   },
 
   getWeatherHistory: async (limit = 10, hours = 24): Promise<BackendWeatherObservation[]> => {

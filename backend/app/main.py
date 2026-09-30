@@ -135,6 +135,10 @@ app.add_exception_handler(Exception, global_exception_handler)
 # Include master API router
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
+# Direct weather alias routes (/api/weather/*)
+from app.api.endpoints import weather as weather_endpoint
+app.include_router(weather_endpoint.router, prefix="/api/weather", tags=["Weather Direct"])
+
 @app.get("/health")
 @app.get("/api/health")
 @app.get("/api/v1/health")

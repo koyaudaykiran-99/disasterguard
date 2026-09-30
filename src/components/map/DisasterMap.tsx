@@ -97,8 +97,9 @@ export const DisasterMap: React.FC<DisasterMapProps> = ({ height = 'h-[520px]' }
   const [tileMode, setTileMode] = useState<'tactical' | 'standard'>('tactical');
   const [showLayerDrawer, setShowLayerDrawer] = useState<boolean>(false);
 
-  // 14 Operational Layers State
+  // Operational Layers State (including Live Doppler Rain Radar)
   const [layers, setLayers] = useState({
+    rainRadar: true,
     currentRisk: true,
     forecastRisk: true,
     floodSusceptibility: true,
@@ -118,6 +119,41 @@ export const DisasterMap: React.FC<DisasterMapProps> = ({ height = 'h-[520px]' }
   const [historicalEvents, setHistoricalEvents] = useState<HistoricalFloodEvent[]>([]);
   const [hotspots, setHotspots] = useState<RiskHotspot[]>([]);
   const [clusters, setClusters] = useState<IncidentCluster[]>([]);
+
+  // RainViewer Doppler Radar Tile State
+  const [radarPath, setRadarPath] = useState<string | null>(null);
+  const [radarHost, setRadarHost] = useState<string>('https://tilecache.rainviewer.com');
+  const [radarAvailable, setRadarAvailable] = useState<boolean>(true);
+
+  // Fetch latest Doppler Radar timestamp from RainViewer API
+  useEffect(() => {
+    let isMounted = true;
+    const fetchRadar = async () => {
+      try {
+        const res = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+        if (!res.ok) throw new Error(`RainViewer HTTP ${res.status}`);
+        const data = await res.json();
+        if (!isMounted) return;
+        if (data.radar?.past && data.radar.past.length > 0) {
+          const latest = data.radar.past[data.radar.past.length - 1];
+          setRadarPath(latest.path || `/v2/radar/${latest.time}`);
+          if (data.host) setRadarHost(data.host);
+          setRadarAvailable(true);
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        console.warn('[DisasterMap] RainViewer Doppler radar stream offline, falling back gracefully:', err);
+        setRadarAvailable(false);
+      }
+    };
+
+    fetchRadar();
+    const radarInterval = setInterval(fetchRadar, 180000); // 3 minutes
+    return () => {
+      isMounted = false;
+      clearInterval(radarInterval);
+    };
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -156,7 +192,7 @@ export const DisasterMap: React.FC<DisasterMapProps> = ({ height = 'h-[520px]' }
           <span className="text-gray-600">|</span>
           <span className="text-emerald-400 flex items-center gap-1 text-[11px]">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-            14 Layer Multi-Signal Active
+            15 Operational Layers Active
           </span>
         </div>
 
@@ -176,7 +212,26 @@ export const DisasterMap: React.FC<DisasterMapProps> = ({ height = 'h-[520px]' }
             <span>{tileMode === 'tactical' ? 'Tactical Dark' : 'OSM Daylight'}</span>
           </button>
 
-          {/* 14 Layers Manager Button */}
+          {/* Doppler Rain Radar Toggle */}
+          <button
+            onClick={() => toggleLayer('rainRadar')}
+            className={`px-2.5 py-1 rounded-lg transition-colors flex items-center space-x-1.5 ${
+              layers.rainRadar
+                ? 'bg-cyan-600/30 text-cyan-300 border border-cyan-500/40'
+                : 'bg-gray-800 text-gray-400 hover:text-white'
+            }`}
+            title="Toggle RainViewer Live Doppler Radar"
+          >
+            <CloudRain className={`w-3.5 h-3.5 ${layers.rainRadar ? 'text-cyan-400 animate-pulse' : ''}`} />
+            <span>Radar</span>
+            {radarAvailable ? (
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            ) : (
+              <span className="text-[10px] text-amber-400 font-mono">(Offline)</span>
+            )}
+          </button>
+
+          {/* Layers Manager Button */}
           <button
             onClick={() => setShowLayerDrawer(!showLayerDrawer)}
             className={`px-2.5 py-1 rounded-lg transition-colors flex items-center space-x-1 font-bold ${
@@ -184,10 +239,10 @@ export const DisasterMap: React.FC<DisasterMapProps> = ({ height = 'h-[520px]' }
                 ? 'bg-indigo-600 text-white shadow-sm'
                 : 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-500/30'
             }`}
-            title="Open 14-Layer Operational Controls"
+            title="Open 15-Layer Operational Controls"
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>Layers (14)</span>
+            <span>Layers (15)</span>
             <ChevronDown className="w-3 h-3 ml-0.5" />
           </button>
 
@@ -220,20 +275,21 @@ export const DisasterMap: React.FC<DisasterMapProps> = ({ height = 'h-[520px]' }
 
           <div className="space-y-2">
             {[
-              { key: 'currentRisk', label: '1. Current Risk Zones', count: markers.filter(m => m.type === 'DISASTER').length },
-              { key: 'forecastRisk', label: '2. Multi-Horizon Forecast Surge', count: 'Active' },
-              { key: 'floodSusceptibility', label: '3. Flood Inundation Polygons', count: INUNDATION_ZONES.length },
-              { key: 'historicalFloods', label: '4. Historical Disaster Events', count: historicalEvents.length },
-              { key: 'activeSos', label: '5. Citizen SOS Distress Points', count: sosIncidents.length },
-              { key: 'activeIncidents', label: '6. Prioritized Incidents', count: markers.filter(m => m.type === 'EMERGENCY').length },
-              { key: 'incidentClusters', label: '7. DBSCAN Incident Clusters', count: clusters.length },
-              { key: 'riskHotspots', label: '8. PostGIS Spatial Hotspots', count: hotspots.length },
-              { key: 'rescueTeams', label: '9. Rescue Squads & Staging', count: 4 },
-              { key: 'shelters', label: '10. Safe Shelters & Evac Hubs', count: safeZones.length },
-              { key: 'hospitals', label: '11. Emergency Trauma Hospitals', count: 3 },
-              { key: 'alerts', label: '12. Active Broadcast Alerts', count: 'Synced' },
-              { key: 'resourceContention', label: '13. Resource Contention Vectors', count: 'Active' },
-              { key: 'operationalBottlenecks', label: '14. Road & Drainage Bottlenecks', count: 2 },
+              { key: 'rainRadar', label: '1. Live Doppler Radar (RainViewer)', count: radarAvailable ? 'Live' : 'Offline' },
+              { key: 'currentRisk', label: '2. Current Risk Zones', count: markers.filter(m => m.type === 'DISASTER').length },
+              { key: 'forecastRisk', label: '3. Multi-Horizon Forecast Surge', count: 'Active' },
+              { key: 'floodSusceptibility', label: '4. Flood Inundation Polygons', count: INUNDATION_ZONES.length },
+              { key: 'historicalFloods', label: '5. Historical Disaster Events', count: historicalEvents.length },
+              { key: 'activeSos', label: '6. Citizen SOS Distress Points', count: sosIncidents.length },
+              { key: 'activeIncidents', label: '7. Prioritized Incidents', count: markers.filter(m => m.type === 'EMERGENCY').length },
+              { key: 'incidentClusters', label: '8. DBSCAN Incident Clusters', count: clusters.length },
+              { key: 'riskHotspots', label: '9. PostGIS Spatial Hotspots', count: hotspots.length },
+              { key: 'rescueTeams', label: '10. Rescue Squads & Staging', count: 4 },
+              { key: 'shelters', label: '11. Safe Shelters & Evac Hubs', count: safeZones.length },
+              { key: 'hospitals', label: '12. Emergency Trauma Hospitals', count: 3 },
+              { key: 'alerts', label: '13. Active Broadcast Alerts', count: 'Synced' },
+              { key: 'resourceContention', label: '14. Resource Contention Vectors', count: 'Active' },
+              { key: 'operationalBottlenecks', label: '15. Road & Drainage Bottlenecks', count: 2 },
             ].map((layer) => {
               const isActive = layers[layer.key as keyof typeof layers];
               return (
@@ -283,6 +339,20 @@ export const DisasterMap: React.FC<DisasterMapProps> = ({ height = 'h-[520px]' }
           className={tileMode === 'tactical' ? 'osm-tactical-tiles' : ''}
           maxZoom={19}
         />
+
+        {/* 1. Live Doppler Rain Radar Overlay (RainViewer) */}
+        {layers.rainRadar && radarPath && radarAvailable && (
+          <TileLayer
+            attribution='&copy; <a href="https://www.rainviewer.com" target="_blank" rel="noreferrer">RainViewer</a>'
+            url={
+              radarPath.startsWith('/')
+                ? `${radarHost}${radarPath}/256/{z}/{x}/{y}/2/1_1.png`
+                : `${radarHost}/v2/radar/${radarPath}/256/{z}/{x}/{y}/2/1_1.png`
+            }
+            opacity={0.65}
+            zIndex={350}
+          />
+        )}
 
         {/* 3. PostGIS Flood Inundation Polygons & Risk Zones Overlay */}
         {layers.floodSusceptibility &&
@@ -602,13 +672,25 @@ export const DisasterMap: React.FC<DisasterMapProps> = ({ height = 'h-[520px]' }
             <span className="w-4 h-0.5 border-t-2 border-dashed border-cyan-400"></span>
             <span>Dispatch Path</span>
           </span>
+          <span className="flex items-center space-x-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400/60 border border-cyan-300"></span>
+            <span>Doppler Radar</span>
+          </span>
         </div>
 
         <div className="flex items-center space-x-3 text-gray-500">
-          <span>Tiles: OSM + PostGIS</span>
-          <span>14 Layers Integrated</span>
+          <span>Tiles: OSM + RainViewer Doppler</span>
+          <span>15 Layers Integrated</span>
         </div>
       </div>
+
+      {/* Radar stream offline toast notification if radar active but offline */}
+      {!radarAvailable && layers.rainRadar && (
+        <div className="absolute bottom-12 left-3 z-[400] bg-gray-950/95 border border-amber-500/40 text-amber-300 text-[11px] font-mono px-3 py-1.5 rounded-xl pointer-events-auto flex items-center gap-2 shadow-xl backdrop-blur-md">
+          <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span>Radar stream unavailable • Displaying ground sensor & PostGIS telemetry</span>
+        </div>
+      )}
     </div>
   );
 };

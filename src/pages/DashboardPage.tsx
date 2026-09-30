@@ -10,6 +10,7 @@ import { StaggeredList } from '../components/motion/StaggeredList';
 import { DisasterMap } from '../components/map/DisasterMap';
 import { useDisaster } from '../context/DisasterContext';
 import { Droplets, Waves, Users, Radio, ShieldCheck, LifeBuoy, Sparkles, Database, Bot, CloudRain, Thermometer, Wind, Gauge, Clock } from 'lucide-react';
+import { CommandCenterWeatherPanel } from '../components/weather/CommandCenterWeatherPanel';
 import { FloodIntelligencePanel } from '../components/motion/FloodIntelligencePanel';
 import { MultiHorizonForecastPanel } from '../components/motion/MultiHorizonForecastPanel';
 import { RiskInterpretationCard } from '../components/ai/RiskInterpretationCard';
@@ -139,123 +140,8 @@ export const DashboardPage: React.FC = () => {
         </AnimatedCard>
       </div>
 
-      {/* Live Meteorological & Rainfall Observation Feed (Priority 6) */}
-      <div className="glass-panel p-5 rounded-2xl border border-gray-800 bg-gray-900/60 backdrop-blur-md">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-gray-800/80 pb-3 mb-4">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
-              <CloudRain className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <h3 className="text-sm font-bold font-mono text-gray-100 uppercase tracking-wide">
-                  Live Meteorological Feed
-                </h3>
-                {/* Weather Source Badge */}
-                {currentWeather?.source === 'real' && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    LIVE REAL DATA
-                  </span>
-                )}
-                {currentWeather?.source === 'cached' && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                    CACHED (POSTGRESQL)
-                  </span>
-                )}
-                {currentWeather?.source === 'simulation' && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-                    SIMULATION OVERRIDE
-                  </span>
-                )}
-                {(!currentWeather?.source || currentWeather?.source === 'mock') && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-500/20 text-purple-400 border border-purple-500/40">
-                    SYNTHETIC SENSOR
-                  </span>
-                )}
-              </div>
-              <p className="text-xs text-gray-400 font-mono mt-0.5">
-                Station: {currentWeather?.location || 'Central Metro Basin'} • Coordinates: {currentWeather?.latitude?.toFixed(2) ?? '13.08'}°N, {currentWeather?.longitude?.toFixed(2) ?? '80.27'}°E
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs font-mono text-gray-400">
-            <Clock className="w-3.5 h-3.5 text-gray-500" />
-            <span>
-              Observed:{' '}
-              {currentWeather?.observed_at
-                ? new Date(currentWeather.observed_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-                : 'Just now'}
-            </span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-          <div className="p-2.5 rounded-xl bg-gray-950/40 border border-gray-800/60">
-            <div className="text-[10px] font-mono text-gray-400 uppercase">Condition</div>
-            <div className="text-sm font-bold text-gray-100 truncate mt-0.5">
-              {currentWeather?.condition || 'Clear Sky'}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-gray-950/40 border border-gray-800/60">
-            <div className="text-[10px] font-mono text-gray-400 uppercase flex items-center gap-1">
-              <Thermometer className="w-3 h-3 text-amber-400" /> Temp
-            </div>
-            <div className="text-sm font-bold font-mono text-gray-100 mt-0.5">
-              {currentWeather?.temperature !== undefined ? `${currentWeather.temperature}°C` : '28.0°C'}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-gray-950/40 border border-gray-800/60">
-            <div className="text-[10px] font-mono text-gray-400 uppercase flex items-center gap-1">
-              <Droplets className="w-3 h-3 text-cyan-400" /> Humidity
-            </div>
-            <div className="text-sm font-bold font-mono text-gray-100 mt-0.5">
-              {currentWeather?.humidity !== undefined ? `${currentWeather.humidity}%` : '65%'}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-gray-950/40 border border-gray-800/60">
-            <div className="text-[10px] font-mono text-gray-400 uppercase flex items-center gap-1">
-              <Wind className="w-3 h-3 text-teal-400" /> Wind Speed
-            </div>
-            <div className="text-sm font-bold font-mono text-gray-100 mt-0.5">
-              {currentWeather?.wind_speed !== undefined ? `${currentWeather.wind_speed} km/h` : '10 km/h'}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-gray-950/40 border border-gray-800/60">
-            <div className="text-[10px] font-mono text-gray-400 uppercase flex items-center gap-1">
-              <Gauge className="w-3 h-3 text-indigo-400" /> Pressure
-            </div>
-            <div className="text-sm font-bold font-mono text-gray-100 mt-0.5">
-              {currentWeather?.pressure !== undefined ? `${currentWeather.pressure} hPa` : '1012 hPa'}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-gray-950/40 border border-gray-800/60">
-            <div className="text-[10px] font-mono text-gray-400 uppercase">Rain (1h)</div>
-            <div className="text-sm font-bold font-mono text-blue-400 mt-0.5">
-              {currentWeather?.rainfall_1h !== undefined ? `${currentWeather.rainfall_1h} mm` : '0.0 mm'}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-gray-950/40 border border-gray-800/60">
-            <div className="text-[10px] font-mono text-gray-400 uppercase">Rain (24h)</div>
-            <div className="text-sm font-bold font-mono text-cyan-400 mt-0.5">
-              {currentWeather?.rainfall_24h !== undefined ? `${currentWeather.rainfall_24h} mm` : '0.0 mm'}
-            </div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-gray-950/40 border border-gray-800/60">
-            <div className="text-[10px] font-mono text-gray-400 uppercase">Precip Prob</div>
-            <div className="text-sm font-bold font-mono text-violet-400 mt-0.5">
-              {currentWeather?.precipitation_probability !== undefined ? `${currentWeather.precipitation_probability}%` : '0%'}
-            </div>
-          </div>
-        </div>
-        <div className="mt-3 pt-2.5 border-t border-gray-800/60 text-[10px] font-mono text-gray-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
-          <span>* Real-time observations powered by Open-Meteo API (WMO Standards). Persisted & cached in PostgreSQL.</span>
-          <span className="text-cyan-400/80">ML inference fed directly from live observations</span>
-        </div>
-      </div>
+      {/* Real-Time Meteorological & Rainfall Multi-Source Feed */}
+      <CommandCenterWeatherPanel />
 
       {/* AI Prediction & Risk Score Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
